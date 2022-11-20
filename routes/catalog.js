@@ -6,6 +6,7 @@ const book_controller = require("../controllers/bookController");
 const author_controller = require("../controllers/authorController");
 const genre_controller = require("../controllers/genreController");
 const book_instance_controller = require("../controllers/bookinstanceController");
+const item_controller = require("../controllers/itemController");
 
 /// BOOK ROUTES ///
 
@@ -131,5 +132,31 @@ router.get("/bookinstance/:id", book_instance_controller.bookinstance_detail);
 
 // GET request for list of all BookInstance.
 router.get("/bookinstances", book_instance_controller.bookinstance_list);
+
+/// ITEM ROUTES ///
+
+// GET request for creating Item. NOTE This must come before route for id (i.e. display item).
+router.get("/item/create", item_controller.item_create_get);
+
+// POST request for creating Item.
+router.post("/item/create", item_controller.item_create_post);
+
+// GET request to delete Item.
+router.get("/item/:id/delete", item_controller.item_delete_get);
+
+// POST request to delete Item.
+router.post("/item/:id/delete", item_controller.item_delete_post);
+
+// GET request to update Item.
+router.get("/item/:id/update", item_controller.item_update_get);
+
+// POST request to update Item.
+router.post("/item/:id/update", item_controller.item_update_post);
+
+// GET request for one Item.
+router.get("/item/:id", item_controller.item_detail);
+
+// GET request for list of all Item.
+router.get("/items", item_controller.item_list);
 
 module.exports = router;
