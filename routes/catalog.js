@@ -7,6 +7,7 @@ const author_controller = require("../controllers/authorController");
 const genre_controller = require("../controllers/genreController");
 const book_instance_controller = require("../controllers/bookinstanceController");
 const item_controller = require("../controllers/itemController");
+const contact_controller = require("../controllers/contactController");
 
 /// BOOK ROUTES ///
 
@@ -158,5 +159,33 @@ router.get("/item/:id", item_controller.item_detail);
 
 // GET request for list of all Item.
 router.get("/items", item_controller.item_list);
+
+/// CONTACT ROUTES ///
+
+//niet allemaal nodig -> nog uitzoeken welke vervangen mogen worden
+
+// GET request for creating Contact. NOTE This must come before route for id (i.e. display item).
+router.get("/contact/create", contact_controller.contact_create_get);
+
+// POST request for creating Contact.
+router.post("/contact/create", contact_controller.contact_create_post);
+
+// GET request to delete Contact.
+router.get("/contact/:id/delete", contact_controller.contact_delete_get);
+
+// POST request to delete Contact.
+router.post("/contact/:id/delete", contact_controller.contact_delete_post);
+
+// GET request to update Contact.
+router.get("/contact/:id/update", contact_controller.contact_update_get);
+
+// POST request to update Contact.
+router.post("/contact/:id/update", contact_controller.contact_update_post);
+
+// GET request for one Contact.
+router.get("/contact/:id", contact_controller.contact_detail);
+
+// GET request for list of all Contacts.
+router.get("/contacts", contact_controller.contact_list);
 
 module.exports = router;

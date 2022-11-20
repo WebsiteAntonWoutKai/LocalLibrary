@@ -1,0 +1,19 @@
+//- naar hier redirecten nadat het verzonden is
+
+extends layout
+
+block content
+
+    h1 Contact Form
+
+    div(style='margin-left:20px;margin-top:20px')
+
+        h4 Form has been send! 
+
+        p Email: #{contact.email}
+
+        p Subject: #{contact.subject}
+
+        p Message: #{contact.message}
+
+        p Date: #{contact.date_formatted}
