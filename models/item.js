@@ -7,6 +7,7 @@ const Schema = mongoose.Schema;
 const ItemSchema = new Schema({
   name: { type: String, required: true, maxLength: 100 },
   price: { type: Number, required: true }, //required geeft aan als field ingegeven moet zijn vooraleer document opgeslaan kan worden
+  summary: { type: String },
   amountInStock: { type: Number, required: true},
   //image: { type: String, required: true },
 });
