@@ -1,3 +1,5 @@
+//nog te implimenteren voor contact form -> zorgen dat geen javascript geinjecteerd kan worden
+
 const { DateTime } = require("luxon");
 
 const mongoose = require("mongoose");

@@ -9,5 +9,4 @@ router.get('/test', function(req, res, next){
   res.send('This is a test');
 });
 
-
 module.exports = router;

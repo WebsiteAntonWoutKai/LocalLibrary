@@ -1,7 +1,7 @@
 {
   "name": "labowebteh",
   "version": "0.0.0",
-    "engines": {
+  "engines": {
     "node": "16.17.1"
   },
   "private": true,
@@ -12,9 +12,11 @@
   },
   "dependencies": {
     "async": "^3.2.4",
+    "body-parser": "^1.20.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "express-handlebars": "^6.0.6",
     "express-validator": "^6.14.2",
     "http-errors": "~1.6.3",
     "luxon": "^3.0.4",

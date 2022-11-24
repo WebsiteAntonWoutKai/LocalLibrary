@@ -3,6 +3,12 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+//nodig voor authentication
+const exphbs = require('express-handlebars');
+const bodyParser = require('body-parser');
+
+const crypto = require('crypto');
+const authTokens = {};
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -47,5 +53,16 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
 
+// to support URL-encoded bodies
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cookieParser());
+
+app.use((req, res, next) => {
+  const authToken = req.cookies['AuthToken'];
+  req.user = authTokens[authToken];
+  next();
+});
+
+module.exports = app;

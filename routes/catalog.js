@@ -8,6 +8,7 @@ const genre_controller = require("../controllers/genreController");
 const book_instance_controller = require("../controllers/bookinstanceController");
 const item_controller = require("../controllers/itemController");
 const contact_controller = require("../controllers/contactController");
+const user_controller = require("../controllers/userController");
 
 /// BOOK ROUTES ///
 
@@ -187,5 +188,37 @@ router.get("/contact/:id", contact_controller.contact_detail);
 
 // GET request for list of all Contacts.
 router.get("/contacts", contact_controller.contact_list);
+
+/// USER ROUTES ///
+
+router.get('/user', user_controller.user_protected_get);
+
+router.get('/user/login', user_controller.user_login_get);
+
+router.post('/user/login', user_controller.user_login_post);
+
+router.get('/user/register', user_controller.user_register_get);
+
+router.post('/user/register', user_controller.user_register_post);
+
+//router.get('/user/protected', user_controller.user_protected_get);
+
+// GET request to delete User.
+router.get("/user/:id/delete", user_controller.user_delete_get);
+
+// POST request to delete User.
+router.post("/user/:id/delete", user_controller.user_delete_post);
+
+// GET request to update User.
+router.get("/user/:id/update", user_controller.user_update_get);
+
+// POST request to update User.
+router.post("/user/:id/update", user_controller.user_update_post);
+
+// GET request for one User.
+router.get("/user/:id", user_controller.user_detail);
+
+// GET request for list of all User.
+router.get("/users", user_controller.user_list);
 
 module.exports = router;

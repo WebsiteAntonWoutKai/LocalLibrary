@@ -35,7 +35,6 @@ exports.contact_create_get = (req, res, next) => {
     //uitbreiding: meest voorkomende subjects al klaar zetten in een checkbox
     res.render("contact_form", { 
         title: "Contact",
-        exampleSubjects: array,
      });
 };
 
