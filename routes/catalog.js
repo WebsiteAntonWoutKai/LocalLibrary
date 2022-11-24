@@ -8,6 +8,7 @@ const genre_controller = require("../controllers/genreController");
 const book_instance_controller = require("../controllers/bookinstanceController");
 const item_controller = require("../controllers/itemController");
 const contact_controller = require("../controllers/contactController");
+const category_controller = require("../controllers/categoryController");
 
 /// BOOK ROUTES ///
 
@@ -133,6 +134,32 @@ router.get("/bookinstance/:id", book_instance_controller.bookinstance_detail);
 
 // GET request for list of all BookInstance.
 router.get("/bookinstances", book_instance_controller.bookinstance_list);
+
+/// CATEGORY ROUTES ///
+
+// GET request for creating Category. 
+router.get("/category/create", category_controller.category_create_get);
+
+// POST request for creating Category.
+router.post("/category/create", category_controller.category_create_post);
+
+// GET request to delete Category.
+router.get("/category/:id/delete", category_controller.category_delete_get);
+
+// POST request to delete Category.
+router.post("/category/:id/delete", category_controller.category_delete_post);
+
+// GET request to update Category.
+router.get("/category/:id/update", category_controller.category_update_get);
+
+// POST request to update Category.
+router.post("/category/:id/update", category_controller.category_update_post);
+
+// GET request for one Category.
+router.get("/category/:id", category_controller.category_detail);
+
+// GET request for list of all Category.
+router.get("/categories", category_controller.category_list);
 
 /// ITEM ROUTES ///
 

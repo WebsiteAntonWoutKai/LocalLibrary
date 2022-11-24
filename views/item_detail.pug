@@ -6,3 +6,9 @@ block content
     p #[strong Price:] #{item.price}
 
     p #[strong Summary:] #{item.summary}
+
+     hr
+     p
+         a(href=item.url + '/delete') Delete item
+     p
+         a(href=item.url+ '/update') Update item
