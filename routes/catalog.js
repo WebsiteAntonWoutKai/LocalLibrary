@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const authAdmin = require("../middleware/authAdmin");
 
 // Require controller modules.
 const book_controller = require("../controllers/bookController");
@@ -9,6 +10,8 @@ const book_instance_controller = require("../controllers/bookinstanceController"
 const item_controller = require("../controllers/itemController");
 const contact_controller = require("../controllers/contactController");
 const user_controller = require("../controllers/userController");
+const admin_controller = require("../controllers/adminController");
+
 
 /// BOOK ROUTES ///
 
@@ -219,7 +222,16 @@ router.get("/users", user_controller.user_list);
 
 router.get('/user', user_controller.user_protected_get);
 
+router.get("/user/:id/logout", user_controller.user_logout_get);
 
 router.get('/user/login', user_controller.user_login_get);
+
+/// ADMIN ROUTES ///
+
+router.get("/addProduct", authAdmin, admin_controller.addProduct);
+
+router.get("/removeProduct", authAdmin, admin_controller.addProduct);
+
+router.get("/updateProduct", authAdmin, admin_controller.addProduct);
 
 module.exports = router;

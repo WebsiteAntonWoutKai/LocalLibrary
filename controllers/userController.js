@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 
 const crypto = require('crypto');
 const { Console } = require("console");
+const user = require("../models/user");
 const authTokens = {};
 
 const getHashedPassword = (password) => {
@@ -35,10 +36,31 @@ router.use((req, res, next) => {
  */
 
 exports.user_login_get = function (req, res, next) {
-    res.render("login", { title: "Login" });
+    //nagaan als er al een session bezig is, indien ja redirect meteen naar user
+    if (req.session.userid) {
+        User.findById(req.session.userid).exec((err, found_user) => {
+            if(err) {
+                return next(err);
+            }
+            if (found_user == null) {
+                // No results.
+                const err = new Error("No session in progres");
+                err.status = 404;
+                return next(err);
+            }
+            else {
+                res.redirect(found_user.url);
+            }
+        })
+    }
+    //indien neen, genereer login page
+    else {
+        res.render("login", { title: "Login" });
+    }
 };
 
-exports.user_login_post = function (req, res, next) {
+exports.user_login_post = function (req, res) {
+
     const hashedPassword = getHashedPassword(req.body.password);
 
     User.findOne({ email: req.body.email })
@@ -48,26 +70,29 @@ exports.user_login_post = function (req, res, next) {
             }
             if (found_user == null) {
                 // No results.
-                const err = new Error("No account linked to this email");
-                err.status = 404;
-                return next(err);
-            }
-            // Successful, so render.
-            if (found_user.password === hashedPassword) {
-                const authToken = generateAuthToken();
-    
-                authTokens[authToken] = found_user.id;
-    
-                res.cookie('AuthToken', authToken);
-                res.redirect(found_user.url);
-            }
-            else {
                 res.render('login', {
-                    message: 'Invalid username or password',
+                    error: "No account linked to this email.",
                     messageClass: 'alert-danger'
                 });
             }
-        });
+            else {
+                // Successful, so render.
+                if (found_user.password === hashedPassword) {
+                    req.session.userid = found_user.id;
+                    req.session.isLoggedIn = true;
+                    req.session.save(); //kan zijn dat hier gewacht meot worden tot dit klaar is -> indien ja -> async gebruiken
+        
+                    //res.cookie('AuthToken', authToken);
+                    res.redirect(found_user.url);
+                }
+                else {
+                    res.render('login', {
+                        error: "Wrong Password.",
+                        messageClass: 'alert-danger'
+                    });
+                }
+            }
+        });  
 };
 
 exports.user_register_get = function (req, res, next) {
@@ -211,6 +236,16 @@ exports.user_protected_get = function (req, res, next) {
     } else {
         res.redirect('/users/login')
     }
+};
+
+exports.user_logout_get = function(req, res, next) {
+    //destroy de session als de user uitlogt
+    req.session.destroy(err => {
+        if (err) {
+            return next(err);
+        }
+        res.redirect("/users/login");
+    })
 };
 
 // Display list of all Users.
