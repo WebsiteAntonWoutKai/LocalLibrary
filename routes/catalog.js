@@ -191,17 +191,13 @@ router.get("/contacts", contact_controller.contact_list);
 
 /// USER ROUTES ///
 
-router.get('/user', user_controller.user_protected_get);
-
-router.get('/user/login', user_controller.user_login_get);
-
-router.post('/user/login', user_controller.user_login_post);
+//router.post('/user/login', user_controller.user_login_post);
 
 router.get('/user/register', user_controller.user_register_get);
 
 router.post('/user/register', user_controller.user_register_post);
 
-//router.get('/user/protected', user_controller.user_protected_get);
+router.get('/user/protected', user_controller.user_protected_get);
 
 // GET request to delete User.
 router.get("/user/:id/delete", user_controller.user_delete_get);
@@ -220,5 +216,10 @@ router.get("/user/:id", user_controller.user_detail);
 
 // GET request for list of all User.
 router.get("/users", user_controller.user_list);
+
+router.get('/user', user_controller.user_protected_get);
+
+
+router.get('/user/login', user_controller.user_login_get);
 
 module.exports = router;

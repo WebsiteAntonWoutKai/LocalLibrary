@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 
 
 const crypto = require('crypto');
+const { Console } = require("console");
 const authTokens = {};
 
 const getHashedPassword = (password) => {
@@ -18,6 +19,7 @@ const getHashedPassword = (password) => {
 const generateAuthToken = () => {
     return crypto.randomBytes(30).toString('hex');
 }
+
 
 /*
 // to support URL-encoded bodies
@@ -38,25 +40,34 @@ exports.user_login_get = function (req, res, next) {
 
 exports.user_login_post = function (req, res, next) {
     const hashedPassword = getHashedPassword(req.body.password);
-  
-    const user = users.find(u => {
-        return u.email === req.body.email && hashedPassword === u.password
-    });
-  
-    if (user) {
-        const authToken = generateAuthToken();
-  
-        authTokens[authToken] = req.body.email;
-  
-        res.cookie('AuthToken', authToken);
-        res.redirect('/user/:id');
-        return;
-    } else {
-        res.render('login', {
-            message: 'Invalid username or password',
-            messageClass: 'alert-danger'
+
+    User.findOne({ email: req.body.email })
+        .exec((err, found_user) => {
+            if (err) {
+                return next(err);
+            }
+            if (found_user == null) {
+                // No results.
+                const err = new Error("No account linked to this email");
+                err.status = 404;
+                return next(err);
+            }
+            // Successful, so render.
+            if (found_user.password === hashedPassword) {
+                const authToken = generateAuthToken();
+    
+                authTokens[authToken] = found_user.id;
+    
+                res.cookie('AuthToken', authToken);
+                res.redirect(found_user.url);
+            }
+            else {
+                res.render('login', {
+                    message: 'Invalid username or password',
+                    messageClass: 'alert-danger'
+                });
+            }
         });
-    }
 };
 
 exports.user_register_get = function (req, res, next) {
@@ -181,7 +192,7 @@ exports.user_register_post = [
                     res.render('login', {
                     message: 'Registration Complete. Please login to continue.',
                     messageClass: 'alert-success'
-                });
+                    });
                 });
             };
         });
@@ -195,13 +206,10 @@ exports.user_register_post = [
 }];
 
 exports.user_protected_get = function (req, res, next) {  
-    if (req.user) {
-    res.render('user_detail');
+    if (req.session.user === user) {
+        res.redirect(user.url);
     } else {
-        res.render('login', {
-            message: 'Please login to continue',
-            messageClass: 'alert-danger'
-        });
+        res.redirect('/users/login')
     }
 };
 
@@ -221,7 +229,7 @@ exports.user_list = function (req, res, next) {
         });
 };
 
-// Display detail page for a specific Author.
+// Display detail page for a specific User.
 exports.user_detail = (req, res, next) => {
     async.parallel(
         {
@@ -248,99 +256,6 @@ exports.user_detail = (req, res, next) => {
         }
     );
 };
-
-// Display User create form on GET.
-/*
-exports.user_create_get = (req, res, next) => {
-    res.render("user_form", { title: "Create User" });
-};
-*/
-
-// Handle User create on POST.
-/*
-exports.user_create_post = [
-    // Validate and sanitize fields.
-    body("first_name")
-        .trim()
-        .isLength({ min: 1 })
-        .escape()
-        .withMessage("First name must be specified.")
-        .isAlphanumeric()
-        .withMessage("First name has non-alphanumeric characters."),
-    body("family_name")
-        .trim()
-        .isLength({ min: 1 })
-        .escape()
-        .withMessage("Family name must be specified.")
-        .isAlphanumeric()
-        .withMessage("Family name has non-alphanumeric characters."),
-    body("date_of_birth", "Invalid date of birth")
-        .optional({ checkFalsy: true })
-        .isISO8601()
-        .toDate(),
-    body("email")
-        .trim()
-        .isLength({ min: 1 })
-        .escape()
-        .withMessage("Email must be specified.")
-        .isEmail()
-        .withMessage("Must be a valid email address."),
-    body("street")
-        .trim()
-        .isLength({ min: 1 })
-        .escape()
-        .withMessage("Address name must be specified.")
-        .isAlphanumeric()
-        .withMessage("Street name has non-alphanumeric characters."),
-    body("city")
-        .trim()
-        .isLength({ min: 1 })
-        .escape()
-        .withMessage("City name must be specified.")
-        .isAlphanumeric()
-        .withMessage("City name has non-alphanumeric characters."),
-    body("number")
-        .trim()
-        .isLength({ min: 1 })
-        .isNumeric()
-        .withMessage("Number must be numeric"),
-    // Process request after validation and sanitization.
-    (req, res, next) => {
-        // Extract the validation errors from a request.
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            // There are errors. Render form again with sanitized values/errors messages.
-            res.render("user_form", {
-                title: "Create User",
-                user: req.body,
-                errors: errors.array(),
-            });
-            return;
-        }
-        // Data from form is valid.
-
-        // Create an User object with escaped and trimmed data.
-        const user = new User({
-            first_name: req.body.first_name,
-            family_name: req.body.family_name,
-            date_of_birth: req.body.date_of_birth,
-            email: req.body.email,
-            street: req.body.street,
-            city: req.body.city,
-            number: req.body.number,
-            country: req.body.country,
-        });
-        user.save((err) => {
-            if (err) {
-                return next(err);
-            }
-            // Successful - redirect to new User record.
-            res.redirect(user.url);
-        });
-    },
-];
-*/
 
 // Display User delete form on GET.
 exports.user_delete_get = (req, res, next) => {
