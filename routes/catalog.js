@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const authAdmin = require("../middleware/authAdmin");
 
 // Require controller modules.
 const book_controller = require("../controllers/bookController");
@@ -9,6 +10,9 @@ const book_instance_controller = require("../controllers/bookinstanceController"
 const item_controller = require("../controllers/itemController");
 const contact_controller = require("../controllers/contactController");
 const category_controller = require("../controllers/categoryController");
+const user_controller = require("../controllers/userController");
+const admin_controller = require("../controllers/adminController");
+
 
 /// BOOK ROUTES ///
 
@@ -214,5 +218,47 @@ router.get("/contact/:id", contact_controller.contact_detail);
 
 // GET request for list of all Contacts.
 router.get("/contacts", contact_controller.contact_list);
+
+/// USER ROUTES ///
+
+//router.post('/user/login', user_controller.user_login_post);
+
+router.get('/user/register', user_controller.user_register_get);
+
+router.post('/user/register', user_controller.user_register_post);
+
+router.get('/user/protected', user_controller.user_protected_get);
+
+// GET request to delete User.
+router.get("/user/:id/delete", user_controller.user_delete_get);
+
+// POST request to delete User.
+router.post("/user/:id/delete", user_controller.user_delete_post);
+
+// GET request to update User.
+router.get("/user/:id/update", user_controller.user_update_get);
+
+// POST request to update User.
+router.post("/user/:id/update", user_controller.user_update_post);
+
+// GET request for one User.
+router.get("/user/:id", user_controller.user_detail);
+
+// GET request for list of all User.
+router.get("/users", user_controller.user_list);
+
+router.get('/user', user_controller.user_protected_get);
+
+router.get("/user/:id/logout", user_controller.user_logout_get);
+
+router.get('/user/login', user_controller.user_login_get);
+
+/// ADMIN ROUTES ///
+
+router.get("/addProduct", authAdmin, admin_controller.addProduct);
+
+router.get("/removeProduct", authAdmin, admin_controller.addProduct);
+
+router.get("/updateProduct", authAdmin, admin_controller.addProduct);
 
 module.exports = router;
