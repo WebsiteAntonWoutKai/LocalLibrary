@@ -50,6 +50,8 @@ exports.category_detail = (req, res, next) => {
     );
 };
 
+/*
+staat nu in adminController
 exports.category_create_get = (req, res, next) => {
     res.render("category_form", { title: "Create Category" });
 };
@@ -94,7 +96,7 @@ exports.category_create_post = [
         }
     },
 ];
-
+*/
 
 exports.category_delete_get = (req, res, next) => {
     async.parallel(

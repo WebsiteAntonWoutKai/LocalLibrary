@@ -18,6 +18,7 @@ const authTokens = {};
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var catalogRouter = require('./routes/catalog');
+var adminRouter = require('./routes/admin');
 
 var app = express();
 
@@ -41,7 +42,7 @@ app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -85,11 +86,18 @@ app.use((req, res, next) => {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/catalog', catalogRouter);
+app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(101));
+});
+
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -104,8 +112,6 @@ app.use(function(err, req, res, next) {
 
 // parsing the incoming data
 app.use(express.json());
-// to support URL-encoded bodies
-app.use(bodyParser.urlencoded({ extended: true }));
 
 //serving public file
 app.use(express.static(__dirname));

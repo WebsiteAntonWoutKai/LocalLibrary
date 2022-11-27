@@ -17,10 +17,10 @@ block content
             input#email.form-control(type='text', placeholder='Dwight.Schrute@DunderMifflin.com' name='email' required='true' value=(undefined===user ? '' : user.email))
         dif.form-group 
             label(for='password') Password:
-            input#password.form-control(type='text', placeholder="8 characters long" name='password' required='true', value=(undefined===user ? '' : user.password))
+            input#password.form-control(type='password', placeholder="8 characters long" name='password' required='true', value=(undefined===user ? '' : user.password))
         dif.form-group 
             label(for='confirmPassword') Confirm Password:
-            input#confirmPassword.form-control(type='text', placeholder="8 characters long" name='confirmPassword' required='true', value=(undefined===user ? '' : user.confirmPassword))
+            input#confirmPassword.form-control(type='password', placeholder="8 characters long" name='confirmPassword' required='true', value=(undefined===user ? '' : user.confirmPassword))
         dif.form-group 
             label(for='street') Street:
             input#street.form-control(type='text', placeholder="First Street" name='street' required='true', value=(undefined===user ? '' : user.street))

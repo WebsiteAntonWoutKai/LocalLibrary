@@ -9,13 +9,14 @@ const bodyParser = require('body-parser');
 const crypto = require('crypto');
 const { Console } = require("console");
 const user = require("../models/user");
+const item = require("../models/item");
 const authTokens = {};
 
 const getHashedPassword = (password) => {
     const sha256 = crypto.createHash('sha256');
     const hash = sha256.update(password).digest('base64');
     return hash;
-  }
+}
   
 const generateAuthToken = () => {
     return crypto.randomBytes(30).toString('hex');
@@ -38,18 +39,24 @@ router.use((req, res, next) => {
 exports.user_login_get = function (req, res, next) {
     //nagaan als er al een session bezig is, indien ja redirect meteen naar user
     if (req.session.userid) {
+        console.log("test login");
         User.findById(req.session.userid).exec((err, found_user) => {
             if(err) {
                 return next(err);
             }
             if (found_user == null) {
                 // No results.
-                const err = new Error("No session in progres");
+                const err = new Error("No session in progress.");
                 err.status = 404;
                 return next(err);
             }
             else {
-                res.redirect(found_user.url);
+                if (found_user.isAdmin) {
+                    res.redirect(found_user.adminUrl);
+                }
+                else {
+                   res.redirect(found_user.url); 
+                }
             }
         })
     }
@@ -80,10 +87,13 @@ exports.user_login_post = function (req, res) {
                 if (found_user.password === hashedPassword) {
                     req.session.userid = found_user.id;
                     req.session.isLoggedIn = true;
-                    req.session.save(); //kan zijn dat hier gewacht meot worden tot dit klaar is -> indien ja -> async gebruiken
-        
-                    //res.cookie('AuthToken', authToken);
-                    res.redirect(found_user.url);
+                    req.session.save();
+                    if (found_user.isAdmin) {
+                        res.redirect(found_user.adminUrl);
+                    }
+                    else {
+                        res.redirect(found_user.url);
+                    }
                 }
                 else {
                     res.render('login', {
@@ -232,14 +242,25 @@ exports.user_register_post = [
 
 exports.user_protected_get = function (req, res, next) {  
     if (req.session.user === user) {
-        res.redirect(user.url);
+        if (user.isAdmin) {
+            res.redirect(user.adminUrl);
+        }
+        else {
+            res.redirect(user.url);
+        }
     } else {
         res.redirect('/users/login')
     }
 };
 
 exports.user_logout_get = function(req, res, next) {
-    //destroy de session als de user uitlogt
+    //destroy de session als de user uitlogt + verwijder winkelmand
+    User.findById(req.session.userid).exec((err, found_user) => {
+        if (err) {
+            return next(err);
+        }
+        found_user.clearCart();
+    })
     req.session.destroy(err => {
         if (err) {
             return next(err);
@@ -287,6 +308,7 @@ exports.user_detail = (req, res, next) => {
             res.render("user_detail", {
                 title: "User Detail",
                 user: results.user,
+                cart: results.user.shoppingCart.items,
             });
         }
     );
@@ -449,3 +471,54 @@ exports.user_update_post = [
         }
     },
 ];
+
+/*
+//misschien beter om dit in itemcontroller te zetten, dan is item al beschikbaar en kan user uit session gehaald worden
+exports.user_addToCart_get = function (req, res, next) {
+    if (req.session.userid) {
+        res.render("item_detail_addToCart");
+    }
+    else{
+        res.render("login", { title: "Login" });
+    }
+};
+
+exports.user_addToCart_post = [
+    body("size")
+        .trim()
+        .isLength({ min: 1 })
+        .escape()
+        .withMessage("City name must be specified.")
+        .isAlphanumeric()
+        .withMessage("City name has non-alphanumeric characters."),
+    body("number")
+        .trim()
+        .isLength({ min: 1 })
+        .isNumeric()
+        .withMessage("Number must be numeric"),
+
+    (req, res, next) => {
+        async.parallel({
+            user(callback) {
+                User.findById(req.session.userid).exec(callback);
+            },
+            item(callback) {
+                Item.findById(req.body.item.id).exec(callback);
+            },
+        })
+        user.findById(req.session.userid).exec((err, found_user) => {
+            if(err) {
+                return next(err);
+            }
+            if (found_user == null) {
+                // No results.
+                const err = new Error("No session in progress.");
+                err.status = 404;
+                return next(err);
+            }
+            found_user.addToCart
+            
+        });
+    }
+];
+*/

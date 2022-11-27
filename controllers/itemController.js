@@ -1,4 +1,5 @@
 const Item = require("../models/item");
+const User = require("../models/user");
 const Category = require("../models/category");
 const { body, validationResult } = require("express-validator");
 const async = require("async");
@@ -26,7 +27,9 @@ exports.item_detail = (req, res, next) => {
                 .populate("category")
                 .populate("price")
                 .populate("summary")
-                .populate("amountInStock")
+                .populate("stockLarge")
+                .populate("stockMedium")
+                .populate("stockSmall")
                 .exec(callback);
         },
     },
@@ -41,13 +44,36 @@ exports.item_detail = (req, res, next) => {
             return next(err);
         }
         //Sucessful, so render
-        res.render("item_detail", {
-            name: results.item.name,
-            item: results.item,
-        });
+        //enkel als admin bezig is is update knop zichtbaar, anders niet
+        if (req.session.userid) {
+            User.findById(req.session.userid).exec((err, found_user) => {
+                if(err) {
+                    return next(err);
+                }
+                if (found_user.isAdmin) {
+                    res.render("item_detail_admin", {
+                        name: results.item.name,
+                        item: results.item,
+                    });
+                }
+                else {
+                    res.render("item_detail", {
+                        name: results.item.name,
+                        item: results.item,
+                    });
+                }
+            })
+        }
+        else {
+            res.render("item_detail", {
+                name: results.item.name,
+                item: results.item,
+            });
+        }
     }
   );
 };
+
 
 exports.item_create_get = (req, res, next) => {
     async.parallel(
@@ -67,6 +93,8 @@ exports.item_create_get = (req, res, next) => {
         }
     );
 };
+
+
 
 exports.item_create_post = [
     (req, res, next) => {
@@ -91,10 +119,21 @@ exports.item_create_post = [
         .trim()
         .isLength({ min: 1 })
         .escape(),
-    body("amountInStock")
+    body("stockLarge")
         .trim()
-        .isLength({ min: 1 })
-        .escape(),
+        .escape()
+        .isNumeric()
+        .withMessage("Must be numeric."),
+    body("stockMedium")
+        .trim()
+        .escape()
+        .isNumeric()
+        .withMessage("Must be numeric."),
+    body("stockSmall")
+        .trim()
+        .escape()
+        .isNumeric()
+        .withMessage("Must be numeric."),
 
 
     // Process request after validation and sanitization.
@@ -107,7 +146,9 @@ exports.item_create_post = [
             category: req.body.category,
             price: req.body.price,
             summary: req.body.summary,
-            amountInStock: req.body.amountInStock,
+            stockLarge: req.body.stockLarge,
+            stockMedium: req.body.stockMedium,
+            stockSmall: req.body.stockSmall,
         });
 
         if (!errors.isEmpty()) {
@@ -143,11 +184,13 @@ exports.item_create_post = [
             if (err) {
                 return next(err);
             }
-
             res.redirect(item.url);
         });
     },
 ];
+
+
+
 
 exports.item_delete_get = (req, res, next) => {
     async.parallel(
@@ -195,9 +238,7 @@ exports.item_delete_post = (req, res, next) => {
     );
 };
 
-
 exports.item_update_get = (req, res, next) => {
-
     async.parallel(
         {
             item(callback) {
@@ -239,7 +280,7 @@ exports.item_update_get = (req, res, next) => {
 exports.item_update_post = [
     (req, res, next) => {
         if (!Array.isArray(req.body.category)) {
-            req.body.categiry =
+            req.body.category =
                 typeof req.body.category === "undefined" ? [] : [req.body.category];
         }
         next();
@@ -259,23 +300,36 @@ exports.item_update_post = [
         .trim()
         .isLength({ min: 1 })
         .escape(),
-    body("amountInStock")
+    body("stockLarge")
         .trim()
-        .isLength({ min: 1 })
-        .escape(),
-
+        .escape()
+        .isNumeric()
+        .withMessage("Must be numeric."),
+    body("stockMedium")
+        .trim()
+        .escape()
+        .isNumeric()
+        .withMessage("Must be numeric."),
+    body("stockSmall")
+        .trim()
+        .escape()
+        .isNumeric()
+        .withMessage("Must be numeric."),
+    
     // Process request after validation and sanitization.
     (req, res, next) => {
         // Extract the validation errors from a request.
         const errors = validationResult(req);
-
 
         const item = new Item({
             name: req.body.name,
             category: req.body.category,
             price: req.body.price,
             summary: req.body.summary,
-            amountInStock: req.body.amountInStock,
+            stockLarge: req.body.stockLarge,
+            stockMedium: req.body.stockMedium,
+            stockSmall: req.body.stockSmall,
+            _id: req.params.id,
         });
 
         if (!errors.isEmpty()) {
@@ -315,9 +369,72 @@ exports.item_update_post = [
             if (err) {
                 return next(err);
             }
-
-
             res.redirect(theitem.url);
         });
     },
+];
+
+
+exports.addToCart_get = function (req, res, next) {
+    if (req.session.userid) {
+        Item.findById(req.params.id).exec((err, found_item) => {
+            if (err) {
+                return next(err);
+            }
+            res.render("item_detail_addToCart", {
+                item: found_item,
+            });
+        })
+    }
+    else {
+        res.render("login", { title: "Login Before Adding Item To Cart." });
+    }
+};
+
+exports.addToCart_post = [
+    body("size").escape(),
+    body("amount")
+        .trim()
+        .isNumeric(),
+
+    (req, res, next) => {
+
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            // There are errors. Render form again with sanitized values/errors messages.
+            res.render("item_detail_addToCart", {
+                item: req.body,
+                errors: errors.array(),
+            });
+            return;
+        }
+        async.parallel(
+            {
+                user(callback) {
+                    User.findById(req.session.userid).exec(callback);
+                },
+                item(callback) {
+                    Item.findById(req.params.id).exec(callback);
+                },
+            },
+            (err, results) => {
+                console.log("test");
+                if (err) {
+                    return next(err);
+                }
+                if (results.user == null) {
+                    // No results.
+                    const err = new Error("No session in progress.");
+                    err.status = 404;
+                    return next(err);
+                }
+                results.user.addToCart(results.item, req.body.amount);
+                results.item.lowerStock(req.body.size, req.body.amount);
+                res.redirect(results.user.url);
+            }
+        )
+        
+    }
+    
 ];
