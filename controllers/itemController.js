@@ -2,19 +2,41 @@ const Item = require("../models/item");
 const Category = require("../models/category");
 const { body, validationResult } = require("express-validator");
 const async = require("async");
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const uploadPath = path.join('public', Item.imageBasePath);
+const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif']
+const upload = multer({
+    dest: uploadPath,
+    fileFilter: (req, file, callback) => {
+        callback(null, imageMimeTypes.includes(file.mimetype))
+    }
+    })
 
-// Display list of all Items.
-exports.item_list = (req, res, next) => {
-  Item.find({}, "category name price amountInStock") //summary moet niet worden meegegven in lijst
-      .sort({ name: 1 })
-        .populate("category")
-    .exec(function (err, list_items) {
-        if (err) {
-            return next(err);
-        }
-        res.render("item_list", { title: "Item List", item_list: list_items });
-    });
-};
+function removeImage(fileName) {
+    fs.unlink(path.join(uploadPath, fileName), err => {
+        if (err) console.error(err)
+    })
+}
+exports.item_list = async (req, res) => {
+    let query = Item.find()
+    if (req.query.name != null && req.query.name != '') {
+        query = query.regex('name', new RegExp(req.query.name, 'i'))
+    }
+    if (req.query.price != null && req.query.price != '') {
+        query = query.lte('price',req.query.price)
+    }
+    try {
+        const items = await query.exec()
+        res.render('item_list', {
+            items: items,
+            searchOptions: req.query
+            })
+    } catch {
+        res.redirect("/")
+    }
+}
 
 // Display detail page for a specific Item.
 exports.item_detail = (req, res, next) => {
@@ -27,6 +49,7 @@ exports.item_detail = (req, res, next) => {
                 .populate("price")
                 .populate("summary")
                 .populate("amountInStock")
+                .populate("imageName")
                 .exec(callback);
         },
     },
@@ -69,6 +92,7 @@ exports.item_create_get = (req, res, next) => {
 };
 
 exports.item_create_post = [
+    upload.single('image'),
     (req, res, next) => {
         if (!Array.isArray(req.body.category)) {
             req.body.category =
@@ -77,7 +101,6 @@ exports.item_create_post = [
         next();
     },
 
-    // Validate and sanitize fields.
     body("name")
         .trim()
         .isLength({ min: 1 })
@@ -96,9 +119,10 @@ exports.item_create_post = [
         .isLength({ min: 1 })
         .escape(),
 
-
+    
     // Process request after validation and sanitization.
     (req, res, next) => {
+        const fileName = req.file != null ? req.file.filename : null;
         // Extract the validation errors from a request.
         const errors = validationResult(req);
 
@@ -108,12 +132,12 @@ exports.item_create_post = [
             price: req.body.price,
             summary: req.body.summary,
             amountInStock: req.body.amountInStock,
+            imageName: fileName,
         });
 
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/error messages.
-
-            // Get all authors and genres for form.
+            
             async.parallel(
 
                 (err, results) => {
@@ -143,7 +167,6 @@ exports.item_create_post = [
             if (err) {
                 return next(err);
             }
-
             res.redirect(item.url);
         });
     },
@@ -189,6 +212,7 @@ exports.item_delete_post = (req, res, next) => {
                 if (err) {
                     return next(err);
                 }
+                removeImage(results.item.imageName);
                 res.redirect("/catalog/items");
             });
         }

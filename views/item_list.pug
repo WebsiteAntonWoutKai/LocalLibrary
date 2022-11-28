@@ -1,14 +1,24 @@
 extends layout
 
 block content
-  h1= title
+    h1 All Items
 
-  ul
-    each item in item_list
-      li
-        a(href=item.url) #{item.name}
-        |  (#{item.price})
-        |  (#{item.amountInStock})
+    form(action='', method='GET')
+        div
+            label Name: 
+            | &nbsp
+            input(type='text', name='name', value=`${searchOptions.name}`)
+        div
+            label Price limit: 
+            | &nbsp
+            input(type='number', name='price', value=`${searchOptions.price}`)
+        button(type='submit') Search
 
-    else
-      li There are no items.
+    each item in items
+        li
+           | Name: #{item.name}
+           | Price: #{item.price}
+           | In stock: #{item.amountInStock}
+           br
+           a(href=item.url) 
+            <img height="150" width="100" src="#{item.imagePath}">

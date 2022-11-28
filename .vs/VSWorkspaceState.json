@@ -1,7 +1,16 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\controllers",
+    "\\middleware",
+    "\\models",
+    "\\public",
+    "\\public\\javascripts",
+    "\\public\\uploads",
+    "\\public\\uploads\\images",
+    "\\routes",
+    "\\views"
   ],
-  "SelectedNode": "\\C:\\Users\\kai\\Source\\Repos\\LocalLibrary",
+  "SelectedNode": "\\models\\item.js",
   "PreviewInSolutionExplorer": false
 }
