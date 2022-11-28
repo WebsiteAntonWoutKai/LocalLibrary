@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-const path = require('path');
-const imageBasePath = 'uploads/images'
 
 const Schema = mongoose.Schema;
 
@@ -10,16 +8,16 @@ const ItemSchema = new Schema({
   price: { type: Number, required: true }, 
   summary: { type: String },
   amountInStock: { type: Number, required: true },
-  imageName: { type: String, required: true},
+  image: { type: Buffer, required: true },
+  imageType: {type: String, required: true}
 });
 
 ItemSchema.virtual("url").get(function() {
   return `/catalog/item/${this._id}`;
 });
 ItemSchema.virtual("imagePath").get(function() {
-    if (this.imageName != null) {
-        return path.join('/', imageBasePath, this.imageName);
+    if (this.image != null && this.imageType != null) {
+        return `data:${this.imageType};charset=utf-8;base64,${this.image.toString('base64')}`
     }
 });
 module.exports = mongoose.model("Item", ItemSchema);
-module.exports.imageBasePath = imageBasePath

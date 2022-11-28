@@ -2,22 +2,15 @@ const Item = require("../models/item");
 const Category = require("../models/category");
 const { body, validationResult } = require("express-validator");
 const async = require("async");
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-const uploadPath = path.join('public', Item.imageBasePath);
 const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif']
-const upload = multer({
-    dest: uploadPath,
-    fileFilter: (req, file, callback) => {
-        callback(null, imageMimeTypes.includes(file.mimetype))
-    }
-    })
 
-function removeImage(fileName) {
-    fs.unlink(path.join(uploadPath, fileName), err => {
-        if (err) console.error(err)
-    })
+function saveImage(item, imageEncoded) {
+    if (imageEncoded == null) return
+    const image = JSON.parse(imageEncoded)
+    if (image != null && imageMimeTypes.includes(image.type)) {
+        item.image = new Buffer.from(image.data, 'base64')
+        item.imageType = image.type
+    }
 }
 exports.item_list = async (req, res) => {
     let query = Item.find()
@@ -49,7 +42,6 @@ exports.item_detail = (req, res, next) => {
                 .populate("price")
                 .populate("summary")
                 .populate("amountInStock")
-                .populate("imageName")
                 .exec(callback);
         },
     },
@@ -92,7 +84,6 @@ exports.item_create_get = (req, res, next) => {
 };
 
 exports.item_create_post = [
-    upload.single('image'),
     (req, res, next) => {
         if (!Array.isArray(req.body.category)) {
             req.body.category =
@@ -122,7 +113,6 @@ exports.item_create_post = [
     
     // Process request after validation and sanitization.
     (req, res, next) => {
-        const fileName = req.file != null ? req.file.filename : null;
         // Extract the validation errors from a request.
         const errors = validationResult(req);
 
@@ -132,8 +122,9 @@ exports.item_create_post = [
             price: req.body.price,
             summary: req.body.summary,
             amountInStock: req.body.amountInStock,
-            imageName: fileName,
         });
+
+        saveImage(item, req.body.image)
 
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/error messages.
@@ -212,7 +203,6 @@ exports.item_delete_post = (req, res, next) => {
                 if (err) {
                     return next(err);
                 }
-                removeImage(results.item.imageName);
                 res.redirect("/catalog/items");
             });
         }

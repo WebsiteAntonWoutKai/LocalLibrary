@@ -3,7 +3,7 @@ extends layout
 block content
     h1= title
 
-    form(method='POST' action='' enctype="multipart/form-data")
+    form(method='POST' action='')
         div.form-group
             label(for='name') Name:
             input#title.form-control(type='text', placeholder='Name of item' name='name' required='true' value=(undefined===item ? '' : item.name) )
@@ -18,7 +18,7 @@ block content
             input#amountInStock.form-control(type='text', placeholder='amountInStock' name='amountInStock' value=(undefined===item ? '' : item.amountInStock) required='true')
         <div>
             <label>Image</label>
-            <input type="file" name="image">
+            <input type="file" name="image" class="filepond">
         div.form-group
             label Category:
             div
