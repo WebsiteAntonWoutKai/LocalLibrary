@@ -9,11 +9,13 @@ block content
             | &nbsp
             input(type='text', name='name', value=`${searchOptions.name}`)
         div
-            label Price limit: 
+            label Price limit: 0 
             | &nbsp
-            input(type='number', name='price', value=`${searchOptions.price}`)
+            input(type='range', min = "0", max = "100", name='price', value=`${searchOptions.price}` id="range")
+            label 100 | &nbsp     
+            <span id="value">#{searchOptions.price}</span>
         button(type='submit') Search
-
+        script(src='/javascripts/slider.js')
     each item in items
         li
            | Name: #{item.name}
