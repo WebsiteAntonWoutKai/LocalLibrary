@@ -22,10 +22,20 @@ exports.item_list = async (req, res) => {
     }
     try {
         const items = await query.exec()
-        res.render('item_list', {
-            items: items,
-            searchOptions: req.query
+        if (req.query.name === undefined) {
+            res.render('item_list', {
+                items: items,
+                name: 'Search for an item',
+                price: '0'
             })
+        }
+        else {
+            res.render('item_list', {
+                items: items,
+                name: req.query.name,
+                price: req.query.price
+            })
+        }
     } catch {
         res.redirect("/")
     }

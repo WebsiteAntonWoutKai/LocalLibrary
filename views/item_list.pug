@@ -7,13 +7,13 @@ block content
         div
             label Name: 
             | &nbsp
-            input(type='text', name='name', value=`${searchOptions.name}`)
+            input(type='text', name='name', value=`${name}` onfocus="this.value= ''")
         div
             label Price limit: 0 
             | &nbsp
-            input(type='range', min = "0", max = "100", name='price', value=`${searchOptions.price}` id="range")
+            input(type='range', min = "0", max = "100", name='price', value=`${price}` id="range")
             label 100 | &nbsp     
-            <span id="value">#{searchOptions.price}</span>
+            <span id="value">#{price}</span>
         button(type='submit') Search
         script(src='/javascripts/slider.js')
     each item in items
