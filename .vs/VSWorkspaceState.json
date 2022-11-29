@@ -1,6 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\views"
   ],
+  "SelectedNode": "\\views\\layout.pug",
   "PreviewInSolutionExplorer": false
 }
