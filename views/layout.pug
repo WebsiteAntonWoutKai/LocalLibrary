@@ -13,28 +13,7 @@ html(lang='en')
     <script defer src="https://unpkg.com/filepond/dist/filepond.js"></script>
     <script defer src="/javascripts/fileUpload.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    script.
-        let autocomplete;
-        function initAutocomplete() {
-            autocomplete = new google.maps.places.Autocomplete(
-                document.getElementById('city'),
-                {
-                    types: ['establishment'],
-                    componentRestrictions: {'country': ['BE']},
-                    fields: ['place_id', 'geometry', 'name']
-                });
-            autocomplete.addListener('place_changed', onPlaceChanged);
-        }
-        function onPlaceChanged() {
-            var place = autocomplete.getPlace();
-
-            if(!place.geometry) {
-                document.getElementById('city').placeholder = 'Enter a place';
-            } 
-            else {
-                document.getElementById('details').innerHTML = place.name;    
-            }
-        }
+    script(src='/javascripts/autocomplete.js')
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDAsnSthYOm7NG8-xGgyWcx-HekizhhWEI&libraries=places&callback=initAutocomplete" async defer></script>
     script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js", integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj", crossorigin="anonymous")
     script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js", integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV", crossorigin="anonymous")
