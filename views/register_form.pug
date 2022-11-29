@@ -15,26 +15,25 @@ block content
         div.form-group
             label(for='email') Email: 
             input#email.form-control(type='text', placeholder='Dwight.Schrute@DunderMifflin.com' name='email' required='true' value=(undefined===user ? '' : user.email))
-        dif.form-group 
+        div.form-group 
             label(for='password') Password:
             input#password.form-control(type='text', placeholder="8 characters long" name='password' required='true', value=(undefined===user ? '' : user.password))
-        dif.form-group 
+        div.form-group 
             label(for='confirmPassword') Confirm Password:
             input#confirmPassword.form-control(type='text', placeholder="8 characters long" name='confirmPassword' required='true', value=(undefined===user ? '' : user.confirmPassword))
-        dif.form-group 
+        div.form-group 
             label(for='street') Street:
             input#street.form-control(type='text', placeholder="First Street" name='street' required='true', value=(undefined===user ? '' : user.street))
-        dif.form-group 
+        div.form-group 
             label(for='city') City:
             input#city.form-control(type='text', placeholder="Ghent" name='city' required='true', value=(undefined===user ? '' : user.city))
-        dif.form-group 
+        div.form-group 
             label(for='country') Country:
             input#country.form-control(type='text', placeholder="Norway" name='country' required='true', value=(undefined===user ? '' : user.country))
-        dif.form-group 
+        div.form-group 
             label(for='number') House Number:
             input#number.form-control(type='number', placeholder="1" name='number' required='true', value=(undefined===user ? '' : user.number))
 
-        
         button.btn.btn-primary(type='submit') Submit
 
     if errors
