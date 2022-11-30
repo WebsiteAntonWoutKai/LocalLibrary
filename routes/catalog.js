@@ -5,10 +5,6 @@ const authAdmin = require("../middleware/authAdmin");
 
 
 // Require controller modules.
-const book_controller = require("../controllers/bookController");
-const author_controller = require("../controllers/authorController");
-const genre_controller = require("../controllers/genreController");
-const book_instance_controller = require("../controllers/bookinstanceController");
 const item_controller = require("../controllers/itemController");
 const contact_controller = require("../controllers/contactController");
 const category_controller = require("../controllers/categoryController");
