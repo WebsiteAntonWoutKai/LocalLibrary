@@ -1,6 +1,7 @@
 const Contact = require("../models/contact");
 const async = require("async");
 const { body, validationResult } = require("express-validator");
+const User = require("../models/user");
 
   
 // Display list of all books.
@@ -26,6 +27,7 @@ exports.contact_detail = (req, res, next) => {
             res.render("contact_detail", {
                 title: "Contact Detail",
                 contact: contact,
+                user: User.findById(req.session.userid),
             });
         });
 };
@@ -35,6 +37,7 @@ exports.contact_create_get = (req, res, next) => {
     //uitbreiding: meest voorkomende subjects al klaar zetten in een checkbox
     res.render("contact_form", { 
         title: "Contact",
+        user: User.findById(req.session.userid),
      });
 };
 
@@ -68,6 +71,7 @@ exports.contact_create_post = [
             res.render("contact_form", {
                 title: "Contact",
                 contact: req.body,
+                user: User.findById(req.session.userid),
                 errors: errors.array(),
             });
             return;

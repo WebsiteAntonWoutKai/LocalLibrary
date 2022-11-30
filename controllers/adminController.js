@@ -53,6 +53,7 @@ exports.addProduct_get = function (req, res, next) {
             res.render("item_form", {
                 title: "Create Item",
                 categories: results.categories,
+                user: User.findById(req.session.userid),
             });
         }
     );
@@ -133,6 +134,7 @@ exports.addProduct_post = [
                         title: "Create Item",
                         categories: results.categories,
                         item,
+                        user: User.findById(req.session.userid),
                         errors: errors.array(),
                     });
                 }
@@ -171,6 +173,7 @@ exports.addCategory_post = [
             res.render("category_form", {
                 title: "Create Category",
                 category,
+                user: User.findById(req.session.userid),
                 errors: errors.array(),
             });
             return;

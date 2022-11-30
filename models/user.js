@@ -52,6 +52,9 @@ UserSchema.virtual("url").get(function() {
 UserSchema.virtual("adminUrl").get(function() {
   return `/admin/${this._id}`;
 });
+UserSchema.virtual("admin").get(function() {
+  return this.isAdmin;
+});
 
 UserSchema.methods.validPassword = function (inputPassword) {
   if (this.password != null) {

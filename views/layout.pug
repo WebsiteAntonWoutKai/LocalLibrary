@@ -41,22 +41,33 @@ body
             li(class="nav-item")
               a(class="nav-link" href='/catalog/categories') All categories
             li(class="nav-item")
-              a(class="nav-link" href= '/catalog/contact/create') Contact
+              a(class="nav-link" href='/catalog/contact/create') Contact
 
 
           ul(class="nav navbar-nav ms-auto")
-            li(class="nav-item")
-              a(class="nav-link" href='/users/login') Account
             li(class="nav-item dropdown")
-              a(class="nav-link dropdown-toggle" href='#' data-bs-toggle='dropdown') Admin
+              a(class="nav-link dropdown-toggle" href='/users/login' data-bs-toggle='dropdown') Account
 
-              div(class="dropdown-menu dropdown-menu-end")
-                a(class="dropdown-item" href= '/catalog/category/create') Create new category
-                a(class="dropdown-item" href= '/admin/:id/addProduct') Create new item
-                div(class="dropdown-divider")
-                a(class="dropdown-item" href='#') Logout
-
+              if(user)
+                if(user.isAdmin)
+                  div(class="dropdown-menu dropdown-menu-end")
+                    a(class="dropdown-item" href='/users/login') Account Detail
+                    div(class="dropdown-divider")
+                    a(class="dropdown-item" href='/admin/:id/addProduct') Add Product
+                    div(class="dropdown-divider")
+                    a(class="dropdown-item" href='/admin/:id/addCategory') Add Category
+                    div(class="dropdown-divider")
+                    a(class="dropdown-item" href=user.url+'/logout') Logout
+                else 
+                  div(class="dropdown-menu dropdown-menu-end")
+                    a(class="dropdown-item" href='/users/login') Account Detail
+                    div(class="dropdown-divider")
+                    a(class="dropdown-item" href=user.url+'/logout') Logout
+              else 
+                  div(class="dropdown-menu dropdown-menu-end")
+                    a(class="dropdown-item" href='/users/login') Login
+                    div(class="dropdown-divider")
+                    a(class="dropdown-item" href='/users/register') Register
 
     div(class='col-sm-10')
-      block content
-        h1 Welcome
+          block content
