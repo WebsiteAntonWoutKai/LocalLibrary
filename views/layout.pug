@@ -16,14 +16,14 @@ head
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
   script(src='/javascripts/autocomplete.js')
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDAsnSthYOm7NG8-xGgyWcx-HekizhhWEI&libraries=places&callback=initAutocomplete" async defer></script>
+  <script src="https://code.jquery.com/jquery-3.6.1.slim.js" integrity="sha256-tXm+sa1uzsbFnbXt8GJqsgi2Tw+m4BLGDof6eUPjbtk=" crossorigin="anonymous"></script>
   script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js", integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj", crossorigin="anonymous")
   script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js", integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV", crossorigin="anonymous")
-   
   link(rel='stylesheet', href='/stylesheets/style.css')
 
 body
-  div(class="m-4")
-    nav(class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark")
+  div(class="m-4" id="test")
+    nav(class="navbar navbar-expand-lg navbar-dark")
       div(class="container-fluid")
 
         a(class="navbar-brand" href='/')
@@ -35,7 +35,7 @@ body
         div(id="navbarCollapse" class="collapse navbar-collapse")
           ul(class= "nav navbar-nav")
             li(class="nav-item")
-              a(class="nav-link active" aria-current="page" href='/catalog') Home
+              a(class="nav-link active" href='/catalog') Home
             li(class="nav-item")
               a(class="nav-link" href= '/catalog/items') All Items
             li(class="nav-item")
@@ -68,6 +68,5 @@ body
                    a(class="dropdown-item" href='/users/login') Login
                    div(class="dropdown-divider")
                    a(class="dropdown-item" href='/users/register') Register
-
     div(class='col-sm-10')
           block content
