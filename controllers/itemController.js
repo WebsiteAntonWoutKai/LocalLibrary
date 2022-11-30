@@ -120,7 +120,7 @@ exports.item_create_get = (req, res, next) => {
 };
 
 
-
+//deze functie wordt eigenlijk niet meer gebruikt -> enkel nog een item aanmaken via admin en dus functie in admincontroller
 exports.item_create_post = [
     (req, res, next) => {
         if (!Array.isArray(req.body.category)) {
@@ -203,7 +203,6 @@ exports.item_create_post = [
             );
             return;
         }
-
 
         item.save((err) => {
             if (err) {

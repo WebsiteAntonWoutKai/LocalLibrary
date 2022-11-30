@@ -452,6 +452,7 @@ exports.user_update_post = [
             city: req.body.city,
             number: req.body.number,
             country: req.body.country,
+            shoppingCart: req.body.shoppingCart,
             _id: req.params.id,
         });
 

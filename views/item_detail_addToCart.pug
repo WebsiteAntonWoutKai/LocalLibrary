@@ -25,7 +25,7 @@ block content
                 option(value='Medium' selected=(undefined===size || size!='Medium' ? false:'selected')) Medium
                 option(value='Small' selected=(undefined===size || size!='Small' ? false:'selected')) Small
             label(for="amount") Amount:
-            input#amount.form-control(type="number" name="amount" placeholder="Amount" required='true' value=(undefined===item ? '' : amount))
+            input#amount.form-control(type="number" name="amount" placeholder="Amount" required='true' min=1 value=(undefined===item ? '' : amount))
         p    
             - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
             button.btn.btn-primary(type='submit') Add To Cart

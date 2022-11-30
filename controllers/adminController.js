@@ -5,6 +5,16 @@ const User = require("../models/user");
 const Category = require("../models/category");
 const { body, validationResult } = require("express-validator");
 const async = require("async");
+const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif']
+
+function saveImage(item, imageEncoded) {
+    if (imageEncoded == null) return
+    const image = JSON.parse(imageEncoded)
+    if (image != null && imageMimeTypes.includes(image.type)) {
+        item.image = new Buffer.from(image.data, 'base64')
+        item.imageType = image.type
+    }
+}
 
 exports.admin_details = function (req, res, next) {
     User.findById(req.session.userid).exec((err, found_user) => {
@@ -100,6 +110,9 @@ exports.addProduct_post = [
             stockMedium: req.body.stockMedium,
             stockSmall: req.body.stockSmall,
         });
+
+        saveImage(item, req.body.image);
+
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/error messages.
             // Get all authors and genres for form.
