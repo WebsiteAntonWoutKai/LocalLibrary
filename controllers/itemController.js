@@ -19,59 +19,59 @@ exports.item_list = (req, res, next) => {
 
 // Display detail page for a specific Item.
 exports.item_detail = (req, res, next) => {
-  async.parallel(
-    {
-        item(callback) {
-            Item.findById(req.params.id)
-                .populate("name")
-                .populate("category")
-                .populate("price")
-                .populate("summary")
-                .populate("stockLarge")
-                .populate("stockMedium")
-                .populate("stockSmall")
-                .exec(callback);
+    async.parallel(
+        {
+            item(callback) {
+                Item.findById(req.params.id)
+                    .populate("name")
+                    .populate("category")
+                    .populate("price")
+                    .populate("summary")
+                    .populate("stockLarge")
+                    .populate("stockMedium")
+                    .populate("stockSmall")
+                    .exec(callback);
+            },
         },
-    },
-    (err, results) => {
-        if (err) {
-            return next(err);
+        (err, results) => {
+            if (err) {
+                return next(err);
+            }
+            if (results.item == null) {
+                //no resulsts
+                const err = new Error("Item not found");
+                err.status = 404;
+                return next(err);
+            }
+            //Sucessful, so render
+            //enkel als admin bezig is is update knop zichtbaar, anders niet
+            if (req.session.userid) {
+                User.findById(req.session.userid).exec((err, found_user) => {
+                    if(err) {
+                        return next(err);
+                    }
+                    if (found_user.isAdmin) {
+                        res.render("item_detail_admin", {
+                            name: results.item.name,
+                            item: results.item,
+                        });
+                    }
+                    else {
+                        res.render("item_detail", {
+                            name: results.item.name,
+                            item: results.item,
+                        });
+                    }
+                })
+            }
+            else {
+                res.render("item_detail", {
+                    name: results.item.name,
+                    item: results.item,
+                });
+            }
         }
-        if (results.item == null) {
-            //no resulsts
-            const err = new Error("Item not found");
-            err.status = 404;
-            return next(err);
-        }
-        //Sucessful, so render
-        //enkel als admin bezig is is update knop zichtbaar, anders niet
-        if (req.session.userid) {
-            User.findById(req.session.userid).exec((err, found_user) => {
-                if(err) {
-                    return next(err);
-                }
-                if (found_user.isAdmin) {
-                    res.render("item_detail_admin", {
-                        name: results.item.name,
-                        item: results.item,
-                    });
-                }
-                else {
-                    res.render("item_detail", {
-                        name: results.item.name,
-                        item: results.item,
-                    });
-                }
-            })
-        }
-        else {
-            res.render("item_detail", {
-                name: results.item.name,
-                item: results.item,
-            });
-        }
-    }
-  );
+      );
 };
 
 
@@ -429,8 +429,10 @@ exports.addToCart_post = [
                     err.status = 404;
                     return next(err);
                 }
-                results.user.addToCart(results.item, req.body.amount);
-                results.item.lowerStock(req.body.size, req.body.amount);
+                console.log(req.body.size + " test");
+                results.item.lowerStock(req.body.size, req.body.amount),
+                results.user.addToCart(results.item, req.body.amount, req.body.size),
+                
                 res.redirect(results.user.url);
             }
         )

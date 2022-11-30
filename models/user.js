@@ -2,6 +2,8 @@ const { DateTime } = require("luxon");
 
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const Item = require("../models/item");
+const { nextTick } = require("async");
 
 const Schema = mongoose.Schema;
 
@@ -23,9 +25,10 @@ const UserSchema = new Schema({
           ref: "item",
           //required: true
         },
-        quantity: { type: Number, 
+        size: { type: String },
+        quantity: { type: Number
           //required: true => anders werkt code om een of andere reden niet-> nog uitzoeken waarom
-        }
+        },
       }
     ]
   },
@@ -59,25 +62,30 @@ UserSchema.methods.validPassword = function (inputPassword) {
 };
 
 //nog te fixen
-UserSchema.methods.addToCart = async function(item, amount) {
+UserSchema.methods.addToCart = async function(item, amount, size) {
+  const findIndexOfItem = (element) => {
+    var sizeString = "" + size;     //omdat toString niet werkt
+    var elementIdString = "" + element.itemId;
+    var itemIdSize = "" + element.size; 
+    var itemIdString = "" + item._id;
+    return (itemIdString === elementIdString) && (sizeString === itemIdSize);
+  }
   //kijken als item al in cart zit, zo ja haal op waar
-  const cartItemIndex = this.shoppingCart.items.findIndex(cp => {
-    const cpItemIdString = "" + cp.itemId;  //omdat toString niet werkt
-    const itemIdString = "" + item._id;
-    return cpItemIdString === itemIdString;
-  });
+  const cartItemIndex = this.shoppingCart.items.findIndex(findIndexOfItem);
 
-  let newQuantity = 1;
+  let newQuantity = amount * 1;
+  let sizeString = "" + size;
 
-  const updatedCartItems = [this.shoppingCart.items];
+  const updatedCartItems = [...this.shoppingCart.items];
 
   if (cartItemIndex >= 0) {
-    newQuantity = this.shoppingCart.items[cartItemIndex].quantity + amount;
+    newQuantity = this.shoppingCart.items[cartItemIndex].quantity + amount * 1;
     updatedCartItems[cartItemIndex].quantity = newQuantity;
   } else {
     updatedCartItems.push({
       itemId: item._id,
-      quantity: newQuantity
+      size: sizeString,
+      quantity: newQuantity,
     });
   }
 
@@ -91,19 +99,35 @@ UserSchema.methods.addToCart = async function(item, amount) {
 //code nog fixen
 UserSchema.methods.removeFromCart = async function(cartId) {
   const updatedCartItems = this.shoppingCart.items.filter(item => {
-    return item.itemId.toString() !== cartId.toString();
+    var itemIdString = "" + item.itemId;  //omdat toString niet werkt
+    var cartIdString = "" + cartId;
+    return itemIdString !== cartIdString;
   });
 
   const updatedcart = {
     items: updatedCartItems
   };
 
-  this.cart = updatedcart;
+  this.shoppingCart = updatedcart;
   return await this.save();
 };
 
 UserSchema.methods.clearCart = async function() {
-  this.cart = { items: [] };
+  //alle items in shopping cart terug toevoegen bij stock -> niets uit de cart wordt gekocht
+  this.shoppingCart.items.forEach(element => {
+    Item.findById(element.itemId).exec((err, found_item) => {
+      if (err) {
+        return next(err);
+      }
+      if (found_item == null) {
+        console.log("Heh??");
+        return;
+      }
+      found_item.upStock(element.size, element.quantity);
+    })
+  });
+  //cart legen
+  this.shoppingCart = { items: [] };
   return await this.save();
 };
 

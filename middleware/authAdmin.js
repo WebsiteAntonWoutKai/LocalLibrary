@@ -5,6 +5,7 @@ module.exports = (req, res, next) => {
   //check als de admin credentials gelden voor huidige user gebonden aan session
   if (req.session.userid) {
     User.findById(req.session.userid).exec((err, found_user) => {
+      console.log("is inderdaad admin");
       if(err) {
           return next(err);
       }

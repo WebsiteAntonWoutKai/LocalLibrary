@@ -50,6 +50,7 @@ exports.addProduct_get = function (req, res, next) {
 
 exports.addProduct_post = [
     (req, res, next) => {
+        console.log("test1");
         if (!Array.isArray(req.body.category)) {
             req.body.category =
                 typeof req.body.category === "undefined" ? [] : [req.body.category];
@@ -70,16 +71,24 @@ exports.addProduct_post = [
         .trim()
         .isLength({ min: 1 })
         .escape(),
-    body("size")
+    body("stockLarge")
         .trim()
-        .isLength({ min: 1 }),
-    body("amount")
-        .trim()
-        .isLength({ min: 1 })
+        .escape()
         .isNumeric()
-        .withMessage("Amount must be numeric"),
+        .withMessage("Must be numeric."),
+    body("stockMedium")
+        .trim()
+        .escape()
+        .isNumeric()
+        .withMessage("Must be numeric."),
+    body("stockSmall")
+        .trim()
+        .escape()
+        .isNumeric()
+        .withMessage("Must be numeric."),
     // Process request after validation and sanitization.
     (req, res, next) => {
+        console.log("test2");
         // Extract the validation errors from a request.
         const errors = validationResult(req);
         const item = new Item({
@@ -87,16 +96,17 @@ exports.addProduct_post = [
             category: req.body.category,
             price: req.body.price,
             summary: req.body.summary,
-            Stock: {
-                size: req.body.size,
-                amount: req.body.amount,
-            },
+            stockLarge: req.body.stockLarge,
+            stockMedium: req.body.stockMedium,
+            stockSmall: req.body.stockSmall,
         });
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/error messages.
             // Get all authors and genres for form.
+            console.log("test3"),
             async.parallel(
                 (err, results) => {
+                    console.log("test4");
                     if (err) {
                         return next(err);
                     }
@@ -120,6 +130,7 @@ exports.addProduct_post = [
             if (err) {
                 return next(err);
             }
+            console.log("test5");
             res.redirect(item.url);
         });
     },

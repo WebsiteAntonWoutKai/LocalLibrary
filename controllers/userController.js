@@ -39,16 +39,22 @@ router.use((req, res, next) => {
 exports.user_login_get = function (req, res, next) {
     //nagaan als er al een session bezig is, indien ja redirect meteen naar user
     if (req.session.userid) {
-        console.log("test login");
         User.findById(req.session.userid).exec((err, found_user) => {
             if(err) {
                 return next(err);
             }
             if (found_user == null) {
                 // No results.
-                const err = new Error("No session in progress.");
+
+                req.session.destroy(err => {
+                    if (err) {
+                        return next(err);
+                    }
+                    res.redirect("/users/login");
+                })
+                /*const err = new Error("No session in progress.");
                 err.status = 404;
-                return next(err);
+                return next(err);*/
             }
             else {
                 if (found_user.isAdmin) {
@@ -141,7 +147,9 @@ exports.user_register_post = [
         .isLength({ min: 8 })
         .withMessage("Password is at least 8 charachters long.")
         .escape()
-        .withMessage("Password must be specified."),
+        .withMessage("Password must be specified.")
+        .isStrongPassword()
+        .withMessage("Password not strong enough."),
     body("confirmPassword")
         .trim()
         .isLength({ min: 8 })
@@ -351,6 +359,7 @@ exports.user_delete_post = (req, res, next) => {
             if (err) {
                 return next(err);
             }
+            req.user_logout_get;
             // Success
             User.findByIdAndRemove(req.body.userid, (err) => {
                 if (err) {

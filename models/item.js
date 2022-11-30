@@ -34,18 +34,42 @@ ItemSchema.virtual("adminUrl").get(function() {
 
 //nog te fixen
 ItemSchema.methods.lowerStock = async function(size, amount) {
-  let newQuantity = 1;
+  let newQuantity = 0;
+  var addedToCart = amount * 1; //zodat amount wordt gecast naar Number
+  var sizeString = "" + size;
 
-  if (size === "Large") {
-    newQuantity = this.stockLarge - amount;
+  if (sizeString === "Large") {
+    newQuantity = this.stockLarge - addedToCart;
     this.stockLarge = newQuantity;
   }
-  if (size === "Medium") {
-    newQuantity = this.stockMedium - amount;
+  if (sizeString === "Medium") {
+    newQuantity = this.stockMedium - addedToCart;
     this.stockMedium = newQuantity;
   }
-  if (size === "Small") {
-    newQuantity = this.stockSmall - amount;
+  if (sizeString === "Small") {
+    newQuantity = this.stockSmall - addedToCart;
+    this.stockSmall = newQuantity;
+  }
+
+  return await this.save();
+}
+
+//nog te fixen
+ItemSchema.methods.upStock = async function(size, amount) {
+  let newQuantity = 0;
+  let addedToCart = amount * 1; //zodat amount wordt gecast naar Number
+  let sizeString = "" + size;
+
+  if (sizeString === "Large") {
+    newQuantity = this.stockLarge + addedToCart;
+    this.stockLarge = newQuantity;
+  }
+  if (sizeString === "Medium") {
+    newQuantity = this.stockMedium + addedToCart;
+    this.stockMedium = newQuantity;
+  }
+  if (sizeString === "Small") {
+    newQuantity = this.stockSmall + addedToCart;
     this.stockSmall = newQuantity;
   }
 

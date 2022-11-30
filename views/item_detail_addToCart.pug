@@ -20,10 +20,10 @@ block content
         hr
         p
             label(for='size') Size:
-            select#status.form-control(type='select', placeholder='Select status' name='status' required='true' value=(undefined===item ? '' : size ))
-                option(value='Large' selected=(undefined===item || size!='Large' ? false:'selected')) Large
-                option(value='Medium' selected=(undefined===item || size!='Medium' ? false:'selected')) Medium
-                option(value='Small' selected=(undefined===item || size!='Small' ? false:'selected')) Small
+            select#size.form-control(type='select', placeholder='Select status' name='size' required='true' value=(undefined===item ? '' : size ))
+                option(value='Large' selected=(undefined===size || size!='Large' ? false:'selected')) Large
+                option(value='Medium' selected=(undefined===size || size!='Medium' ? false:'selected')) Medium
+                option(value='Small' selected=(undefined===size || size!='Small' ? false:'selected')) Small
             label(for="amount") Amount:
             input#amount.form-control(type="number" name="amount" placeholder="Amount" required='true' value=(undefined===item ? '' : amount))
         p    
