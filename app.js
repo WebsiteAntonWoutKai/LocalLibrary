@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const https = require("https");
+const fs = require("fs");
 //nodig voor authentication
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
@@ -20,6 +22,11 @@ var usersRouter = require('./routes/users');
 var catalogRouter = require('./routes/catalog');
 
 var app = express();
+
+const options = {
+    key: fs.readFileSync("./config/cert.key"),
+    cert: fs.readFileSync("./config/cert.crt"),
+    }
 
 const mongoose = require("mongoose");
 const dev_db_url = "mongodb+srv://kai:secret123@cluster1.rzrwysz.mongodb.net/local_library?retryWrites=true&w=majority";
@@ -45,6 +52,17 @@ app.use(express.urlencoded({ extended: false, limit: '50mb' }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+const PORT = 8000;
+
+app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
+});
+
+// Create the https server by initializing it with 'options'
+// -------------------- STEP 3
+https.createServer(options, app).listen(8080, () => {
+    console.log(`HTTPS server started on port 8080`);
+});
 
 // creating 24 hours from milliseconds
 const oneDay = 1000 * 60 * 60 * 24;

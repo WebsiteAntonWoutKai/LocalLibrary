@@ -1,6 +1,11 @@
 {
   "ExpandedNodes": [
     "",
+    "\\config",
+    "\\controllers",
+    "\\public",
+    "\\public\\javascripts",
+    "\\routes",
     "\\views"
   ],
   "SelectedNode": "\\views\\layout.pug",
