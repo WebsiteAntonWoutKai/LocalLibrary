@@ -104,9 +104,9 @@ router.get("/contacts", contact_controller.contact_list);
 
 //router.post('/user/login', user_controller.user_login_post);
 
-router.get('/user/register', user_controller.user_register_get);
+//router.get('/user/register', user_controller.user_register_get);
 
-router.post('/user/register', user_controller.user_register_post);
+//router.post('/user/register', user_controller.user_register_post);
 
 router.get('/user/protected', user_controller.user_protected_get);
 

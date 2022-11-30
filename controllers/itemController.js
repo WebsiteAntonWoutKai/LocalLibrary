@@ -14,6 +14,7 @@ function saveImage(item, imageEncoded) {
     }
 }
 exports.item_list = async (req, res) => {
+
     let query = Item.find()
     if (req.query.name != null && req.query.name != '') {
         query = query.regex('name', new RegExp(req.query.name, 'i'))
@@ -27,14 +28,16 @@ exports.item_list = async (req, res) => {
             res.render('item_list', {
                 items: items,
                 name: 'Search for an item',
-                price: '0'
+                price: '0',
+                user: User.findById(req.session.userid),
             })
         }
         else {
             res.render('item_list', {
                 items: items,
                 name: req.query.name,
-                price: req.query.price
+                price: req.query.price,
+                user: User.findById(req.session.userid),
             })
         }
     } catch {
@@ -79,12 +82,14 @@ exports.item_detail = (req, res, next) => {
                         res.render("item_detail_admin", {
                             name: results.item.name,
                             item: results.item,
+                            user: User.findById(req.session.userid),
                         });
                     }
                     else {
                         res.render("item_detail", {
                             name: results.item.name,
                             item: results.item,
+                            user: User.findById(req.session.userid),
                         });
                     }
                 })
@@ -93,6 +98,7 @@ exports.item_detail = (req, res, next) => {
                 res.render("item_detail", {
                     name: results.item.name,
                     item: results.item,
+                    user: User.findById(req.session.userid),
                 });
             }
         }
@@ -114,6 +120,7 @@ exports.item_create_get = (req, res, next) => {
             res.render("item_form", {
                 title: "Create Item",
                 categories: results.categories,
+                user: User.findById(req.session.userid),
             });
         }
     );
@@ -197,6 +204,7 @@ exports.item_create_post = [
                         title: "Create Item",
                         categories: results.categories,
                         item,
+                        user: User.findById(req.session.userid),
                         errors: errors.array(),
                     });
                 }
@@ -234,6 +242,7 @@ exports.item_delete_get = (req, res, next) => {
             // Successful, so render.
             res.render("item_delete", {
                 title: "Delete Item",
+                user: User.findById(req.session.userid),
                 item: results.item,
             });
         }
@@ -296,6 +305,7 @@ exports.item_update_get = (req, res, next) => {
                 title: "Update Item",
                 categories: results.categories,
                 item: results.item,
+                user: User.findById(req.session.userid),
             });
         }
     );
@@ -381,6 +391,7 @@ exports.item_update_post = [
                         title: "Update Item",
                         categories: results.categories,
                         item,
+                        user: User.findById(req.session.userid),
                         errors: errors.array(),
                     });
                 }
@@ -407,11 +418,15 @@ exports.addToCart_get = function (req, res, next) {
             }
             res.render("item_detail_addToCart", {
                 item: found_item,
+                user: User.findById(req.session.userid),
             });
         })
     }
     else {
-        res.render("login", { title: "Login Before Adding Item To Cart." });
+        res.render("login", { 
+            title: "Login Before Adding Item To Cart.",
+            user: User.findById(req.session.userid),
+        });
     }
 };
 
@@ -429,6 +444,7 @@ exports.addToCart_post = [
             // There are errors. Render form again with sanitized values/errors messages.
             res.render("item_detail_addToCart", {
                 item: req.body,
+                user: User.findById(req.session.userid),
                 errors: errors.array(),
             });
             return;

@@ -16,6 +16,7 @@ exports.category_list = function (req, res, next) {
             res.render("category_list", {
                 title: "Category List",
                 category_list: list_categories,
+                user: User.findById(req.session.userid),
             });
         });
 };
@@ -51,6 +52,7 @@ exports.category_detail = (req, res, next) => {
                             title: "Category Detail",
                             category: results.category,
                             category_items: results.category_items,
+                            user: User.findById(req.session.userid),
                         });
                     }
                     else {
@@ -58,6 +60,7 @@ exports.category_detail = (req, res, next) => {
                             title: "Category Detail",
                             category: results.category,
                             category_items: results.category_items,
+                            user: User.findById(req.session.userid),
                         });
                     }
                 })
@@ -67,6 +70,7 @@ exports.category_detail = (req, res, next) => {
                     title: "Category Detail",
                     category: results.category,
                     category_items: results.category_items,
+                    user: User.findById(req.session.userid),
                 });
             }
         }
