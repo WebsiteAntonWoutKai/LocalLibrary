@@ -46,3 +46,17 @@ body {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+.filepond--root {
+    font-family: 'Gotham Rounded';
+    margin-bottom: 0;
+}
+
+.filepond--panel-root {
+    background-color: var(--form-input-background-color);
+    border: 1px solid var(--form-input-border-color);
+}
+
+.filepond--drop-label {
+    color: var(--color-text-light);
+    font-size: inherit;
+}

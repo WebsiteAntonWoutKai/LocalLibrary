@@ -21,21 +21,13 @@ block content
         dif.form-group 
             label(for='confirmPassword') Confirm Password:
             input#confirmPassword.form-control(type='password', placeholder="8 characters long" name='confirmPassword' required='true', value=(undefined===user ? '' : user.confirmPassword))
-        dif.form-group 
-            label(for='street') Street:
-            input#street.form-control(type='text', placeholder="First Street" name='street' required='true', value=(undefined===user ? '' : user.street))
-        dif.form-group 
-            label(for='city') City:
-            input#city.form-control(type='text', placeholder="Ghent" name='city' required='true', value=(undefined===user ? '' : user.city))
-        dif.form-group 
-            input#confirmPassword.form-control(type='text', placeholder="8 characters long" name='confirmPassword' required='true', value=(undefined===user ? '' : user.confirmPassword))
         div.form-group 
             label(for='address') Address:
-            input#address.form-control(type='text', placeholder="Address" name='address' required='true')
+            input#address.form-control(type='text', placeholder="Address" name='address')
         div.form-group 
             label(for='country') Country:
             input#country.form-control(type='text', placeholder="Norway" name='country' required='true', value=(undefined===user ? '' : user.country))
-        div.form-group 
+        dif.form-group 
             label(for='city') City:
             input#city.form-control(type='text', placeholder="Ghent" name='city' required='true', value=(undefined===user ? '' : user.city))
         div.form-group 
