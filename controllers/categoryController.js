@@ -1,6 +1,7 @@
 const Category = require("../models/category");
 const async = require("async");
 const Item = require("../models/item");
+const User = require("../models/user");
 const { body, validationResult } = require("express-validator");
 
 
@@ -40,16 +41,40 @@ exports.category_detail = (req, res, next) => {
                 err.status = 404;
                 return next(err);
             }
-            // Successful, so render.
-            res.render("category_detail", {
-                title: "Category Detail",
-                category: results.category,
-                category_items: results.category_items,
-            });
+            if (req.session.userid) {
+                User.findById(req.session.userid).exec((err, found_user) => {
+                    if(err) {
+                        return next(err);
+                    }
+                    if (found_user.isAdmin) {
+                        res.render("category_detail_admin", {
+                            title: "Category Detail",
+                            category: results.category,
+                            category_items: results.category_items,
+                        });
+                    }
+                    else {
+                        res.render("category_detail", {
+                            title: "Category Detail",
+                            category: results.category,
+                            category_items: results.category_items,
+                        });
+                    }
+                })
+            }
+            else {
+                res.render("category_detail", {
+                    title: "Category Detail",
+                    category: results.category,
+                    category_items: results.category_items,
+                });
+            }
         }
     );
 };
 
+/*
+staat nu in adminController
 exports.category_create_get = (req, res, next) => {
     res.render("category_form", { title: "Create Category" });
 };
@@ -94,7 +119,7 @@ exports.category_create_post = [
         }
     },
 ];
-
+*/
 
 exports.category_delete_get = (req, res, next) => {
     async.parallel(

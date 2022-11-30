@@ -18,6 +18,7 @@ const authTokens = {};
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var catalogRouter = require('./routes/catalog');
+var adminRouter = require('./routes/admin');
 
 var app = express();
 
@@ -86,11 +87,18 @@ app.use((req, res, next) => {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/catalog', catalogRouter);
+app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(101));
+});
+
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -105,8 +113,6 @@ app.use(function(err, req, res, next) {
 
 // parsing the incoming data
 app.use(express.json());
-// to support URL-encoded bodies
-app.use(bodyParser.urlencoded({ extended: true }));
 
 //serving public file
 app.use(express.static(__dirname));
