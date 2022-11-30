@@ -11,15 +11,10 @@ exports.index = (req, res) => {
             if (found_user == null) {
                 res.render("layout");
             }
-            if (found_user.isAdmin) {
+            else {
                 res.render("layout", {
                     user: found_user,
-                })
-            }
-            if (!found_user.isAdmin) {
-                res.render("layout", {
-                    user: found_user,
-                })
+                    })
             }
         })
     }

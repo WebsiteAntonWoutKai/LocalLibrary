@@ -13,7 +13,7 @@ const admin_controller = require("../controllers/adminController");
 const home_controller = require("../controllers/homeController");
 
 
-router.get("/", home_controller.index, user_controller.user_logout_get);
+router.get("/", home_controller.index);
 
 
 /// CATEGORY ROUTES ///

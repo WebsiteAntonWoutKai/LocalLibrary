@@ -24,22 +24,47 @@ exports.item_list = async (req, res) => {
     }
     try {
         const items = await query.exec()
-        if (req.query.name === undefined) {
-            res.render('item_list', {
-                items: items,
-                name: 'Search for an item',
-                price: '0',
-                user: User.findById(req.session.userid),
+        if (req.session.userid) {
+            User.findById(req.session.userid).exec((err, found_user) => {
+                if (err) {
+                    return next(err);
+                }
+                if (req.query.name === undefined) {
+                    res.render('item_list', {
+                        items: items,
+                        name: 'Search for an item',
+                        price: '0',
+                        user: found_user,
+                    })
+                }
+                else {
+                    res.render('item_list', {
+                        items: items,
+                        name: req.query.name,
+                        price: req.query.price,
+                        user: found_user,
+                    })
+                }
             })
         }
         else {
-            res.render('item_list', {
-                items: items,
-                name: req.query.name,
-                price: req.query.price,
-                user: User.findById(req.session.userid),
-            })
+            if (req.query.name === undefined) {
+                res.render('item_list', {
+                    items: items,
+                    name: 'Search for an item',
+                    price: '0',
+                })
+            }
+            else {
+                res.render('item_list', {
+                    items: items,
+                    name: req.query.name,
+                    price: req.query.price,
+                })
+            }
         }
+
+        
     } catch {
         res.redirect("/")
     }

@@ -19,7 +19,7 @@ exports.contact_detail = (req, res, next) => {
             }
             if (contact == null) {
                 // No results.
-                const err = new Error("Contact from copy not found");
+                const err = new Error("Contact form copy not found");
                 err.status = 404;
                 return next(err);
             }
@@ -27,7 +27,6 @@ exports.contact_detail = (req, res, next) => {
             res.render("contact_detail", {
                 title: "Contact Detail",
                 contact: contact,
-                user: User.findById(req.session.userid),
             });
         });
 };
@@ -35,10 +34,22 @@ exports.contact_detail = (req, res, next) => {
 // Display Contact create form on GET.
 exports.contact_create_get = (req, res, next) => {
     //uitbreiding: meest voorkomende subjects al klaar zetten in een checkbox
-    res.render("contact_form", { 
-        title: "Contact",
-        user: User.findById(req.session.userid),
-     });
+    if (req.session.userid) {
+        User.findById(req.session.userid).exec((err, found_user) => {
+            if (err) {
+                return next(err);
+            }
+            res.render("contact_form", {
+                title: "Contact",
+                user: found_user
+            });
+        })
+    }
+    else {
+        res.render("contact_form", {
+            title: "Contact"
+        });
+    }
 };
 
 // Handle Contact create on POST.

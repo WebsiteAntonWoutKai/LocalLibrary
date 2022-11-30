@@ -12,12 +12,24 @@ exports.category_list = function (req, res, next) {
             if (err) {
                 return next(err);
             }
-            //Successful, so render
-            res.render("category_list", {
-                title: "Category List",
-                category_list: list_categories,
-                user: User.findById(req.session.userid),
-            });
+            if (req.session.userid) {
+                User.findById(req.session.userid).exec((err, found_user) => {
+                    if (err) {
+                        return next(err);
+                    }
+                    res.render("category_list", {
+                        title: "Category List",
+                        category_list: list_categories,
+                        user: found_user,
+                    });
+                })
+            }
+            else {
+                res.render("category_list", {
+                    title: "Category List",
+                    category_list: list_categories,
+                });
+            }
         });
 };
 

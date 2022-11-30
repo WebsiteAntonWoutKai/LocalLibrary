@@ -3,11 +3,13 @@
     "",
     "\\config",
     "\\controllers",
+    "\\models",
     "\\public",
     "\\public\\javascripts",
+    "\\public\\stylesheets",
     "\\routes",
     "\\views"
   ],
-  "SelectedNode": "\\views\\layout.pug",
+  "SelectedNode": "\\routes\\catalog.js",
   "PreviewInSolutionExplorer": false
 }
