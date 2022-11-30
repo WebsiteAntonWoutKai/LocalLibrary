@@ -9,16 +9,20 @@ block content
             input#title.form-control(type='text', placeholder='Name of item' name='name' required='true' value=(undefined===item ? '' : item.name) )
         div.form-group
             label(for='price') Price:
-            textarea#price.form-control(type='textarea', placeholder='Price' name='price' required='true') #{undefined===item ? '' : item.price}
+            input#price.form-control(type='number', placeholder='Price' name='price' min=0 required='true' value=(undefined===item ? '' : item.price))
         div.form-group
             label(for='summary') Summary:
-            textarea#summary.form-control(type='textarea', placeholder='Summary' name='summary' required='true') #{undefined===item ? '' : item.summary}
+            textarea#summary.form-control(type='textarea', placeholder='Summary' name='summary' required='true' value=(undefined===item ? '' : item.summary))
         div.form-group
-            label(for='amountInStock') amountInStock:
-            input#amountInStock.form-control(type='text', placeholder='amountInStock' name='amountInStock' value=(undefined===item ? '' : item.amountInStock) required='true')
-        <div>
-            <label>Image</label>
-            <input type="file" name="image" class="filepond">
+            label(for='stock') Stock:
+            div.form-group
+                label(for='stockLarge') Large: 
+                input#stockLarge.form-control(type='number', placeholder='Amount' name='stockLarge' min=0 required='true' value=(undefined===item ? '' : item.stockLarge))
+                label(for='stockMedium') Medium: 
+                input#stockMedium.form-control(type='number', placeholder='Amount' name='stockMedium' min=0 required='true' value=(undefined===item ? '' : item.stockMedium))
+                label(for='stockSmall') Small: 
+                input#stockSmall.form-control(type='number', placeholder='Amount' name='stockSmall' min=0 required='true' value=(undefined===item ? '' : item.stockSmall))
+
         div.form-group
             label Category:
             div
@@ -26,6 +30,9 @@ block content
                     div(style='display: inline; padding-right:10px;')
                         input.checkbox-input(type='checkbox', name='category', id=category._id, value=category._id, checked=category.checked )
                         label(for=category._id) #{category.name}
+        <div>
+            <label>Image</label>
+            <input type="file" name="image" class="filepond">
         
         button.btn.btn-primary(type='submit') Submit
 

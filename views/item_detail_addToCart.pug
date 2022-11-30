@@ -1,0 +1,36 @@
+extends layout 
+
+block content
+ 
+    h1 Name: #{item.name}
+
+    p #[strong Price:] #{item.price}
+
+    p #[strong Summary:] #{item.summary}
+
+    div(style='margin-left:20px;margin-top:20px')
+
+        h4 Stock
+
+        dl Large: #{item.stockLarge}
+        dl Medium: #{item.stockMedium}
+        dl Small: #{item.stockSmall}
+
+    form(method='POST' action='')
+        hr
+        p
+            label(for='size') Size:
+            select#size.form-control(type='select', placeholder='Select status' name='size' required='true' value=(undefined===item ? '' : size ))
+                option(value='Large' selected=(undefined===size || size!='Large' ? false:'selected')) Large
+                option(value='Medium' selected=(undefined===size || size!='Medium' ? false:'selected')) Medium
+                option(value='Small' selected=(undefined===size || size!='Small' ? false:'selected')) Small
+            label(for="amount") Amount:
+            input#amount.form-control(type="number" name="amount" placeholder="Amount" required='true' min=1 value=(undefined===item ? '' : amount))
+        p    
+            - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
+            button.btn.btn-primary(type='submit') Add To Cart
+        
+    if errors
+        ul
+            for error in errors
+                li!= error.msg

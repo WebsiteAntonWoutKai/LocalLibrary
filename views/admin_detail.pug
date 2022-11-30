@@ -1,0 +1,19 @@
+extends layout
+
+block content
+
+    h1 #{title}: #{user.name}
+
+    div(style='margin-left:20px;margin-top:20px')
+
+    hr
+    p
+        a(href='/admin/:id/addProduct') Add New Product
+    p
+        a(href='/admin/:id/addCategory') Add New Category
+    p
+        a(href=user.url+'/logout') Logout account
+    p
+        a(href=user.url+'/delete') Delete account
+    p
+        a(href=user.url+'/update') Update account
