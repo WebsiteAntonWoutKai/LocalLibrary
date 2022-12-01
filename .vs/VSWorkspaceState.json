@@ -1,15 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\config",
-    "\\controllers",
-    "\\models",
-    "\\public",
-    "\\public\\javascripts",
-    "\\public\\stylesheets",
-    "\\routes",
-    "\\views"
+    ""
   ],
-  "SelectedNode": "\\routes\\catalog.js",
+  "SelectedNode": "\\C:\\Users\\deneu\\Source\\Repos\\LocalLibrary",
   "PreviewInSolutionExplorer": false
 }
