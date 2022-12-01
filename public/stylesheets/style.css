@@ -8,15 +8,10 @@
   border-color: var(--bs-gray);
 }
 
-html,
-body {
-  height: 100%;
+.brandLogo{
+  width: 100px;
 }
-body {
-  padding-top: 40px;
-  padding-bottom: 40px;
-  background-color: #f5f5f5;
-}
+
 .form-signin {
   width: 100%;
   max-width: 330px;
@@ -45,4 +40,45 @@ body {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+.filepond--root {
+  font-family: 'Gotham Rounded';
+  margin-bottom: 0;
+}
+
+.filepond--panel-root {
+  background-color: var(--form-input-background-color);
+  border: 1px solid var(--form-input-border-color);
+}
+
+.filepond--drop-label {
+  color: var(--color-text-light);
+  font-size: inherit;
+}
+
+.navbar{
+  background-color: #1B1C22;
+}
+
+.navbar .nav-item{
+  margin-left: 45px;
+}
+.navbar .nav-item .nav-link{
+  padding: 5px;
+  position: relative;
+}
+.navbar .nav-item .nav-link::before{
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: #E6E6E6;
+  transition: all 0.5s ease;
+  transform: scale(0);
+}
+.navbar .nav-item .nav-ink.active::before,
+.navbar .nav-item .nav-link:hover::before {
+  transform: scale(1);
 }

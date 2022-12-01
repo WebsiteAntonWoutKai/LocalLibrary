@@ -9,52 +9,56 @@ head
   link(rel='stylesheet', href='/stylesheets/style.css')
 
 body
+  div(class="container-fluid bg-dark text-center border-bottom pt-2")
+    div(class="row justify-content-center")
+      img(class="brandLogo" src="/catalog/images/brandLogo")
+    div(class="row justify-content-center")
+      p(class="fs-1 text-white") ELLOLUV
+
+  nav(class="navbar navbar-expand-lg  navbar-dark bg-dark")
+    div(class="container-fluid")
+
+      button(class="navbar-toggler" type='button' data-bs-toggle='collapse' data-bs-target='#navbarCollapse')
+        span(class="navbar-toggler-icon")
+
+      div(id="navbarCollapse" class="collapse navbar-collapse")
+        ul(class= "nav navbar-nav")
+          li(class="nav-item")
+            a(class="nav-link active" aria-current="page" href='/catalog') Home
+          li(class="nav-item")
+            a(class="nav-link" href= '/catalog/items') All Items
+          li(class="nav-item")
+            a(class="nav-link" href='/catalog/categories') All categories
+          li(class="nav-item")
+            a(class="nav-link" href='/catalog/contact/create') Contact
+
+
+        ul(class="nav navbar-nav ms-auto")
+          li(class="nav-item dropdown")
+            a(class="nav-link dropdown-toggle" href='/users/login' data-bs-toggle='dropdown') Account
+
+            if(user)
+              if(user.isAdmin)
+                div(class="dropdown-menu dropdown-menu-end")
+                  a(class="dropdown-item" href='/users/login') Account Detail
+                  div(class="dropdown-divider")
+                  a(class="dropdown-item" href='/admin/:id/addProduct') Add Product
+                  div(class="dropdown-divider")
+                  a(class="dropdown-item" href='/admin/:id/addCategory') Add Category
+                  div(class="dropdown-divider")
+                  a(class="dropdown-item" href=user.url + '/logout') Logout
+              else
+                div(class="dropdown-menu dropdown-menu-end")
+                  a(class="dropdown-item" href='/users/login') Account Detail
+                  div(class="dropdown-divider")
+                  a(class="dropdown-item" href=user.url + '/logout') Logout
+            else
+              div(class="dropdown-menu dropdown-menu-end")
+                a(class="dropdown-item" href='/users/login') Login
+                div(class="dropdown-divider")
+                a(class="dropdown-item" href='/users/register') Register
+
   div(class="m-4")
-    nav(class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark")
-      div(class="container-fluid")
-
-        a(class="navbar-brand" href='#')
-          img(src="/images/brandLogo.jpg" alt="Ellulove")
-
-        button(class="navbar-toggler" type='button' data-bs-toggle='collapse' data-bs-target='#navbarCollapse')
-          span(class="navbar-toggler-icon")
-
-        div(id="navbarCollapse" class="collapse navbar-collapse")
-          ul(class= "nav navbar-nav")
-            li(class="nav-item")
-              a(class="nav-link active" aria-current="page" href='/catalog') Home
-            li(class="nav-item")
-              a(class="nav-link" href= '/catalog/items') All Items
-            li(class="nav-item")
-              a(class="nav-link" href='/catalog/categories') All categories
-            li(class="nav-item")
-              a(class="nav-link" href='/catalog/contact/create') Contact
-
-
-          ul(class="nav navbar-nav ms-auto")
-            li(class="nav-item dropdown")
-              a(class="nav-link dropdown-toggle" href='/users/login' data-bs-toggle='dropdown') Account
-
-              if(user)
-                if(user.isAdmin)
-                  div(class="dropdown-menu dropdown-menu-end")
-                    a(class="dropdown-item" href='/users/login') Account Detail
-                    div(class="dropdown-divider")
-                    a(class="dropdown-item" href='/admin/:id/addProduct') Add Product
-                    div(class="dropdown-divider")
-                    a(class="dropdown-item" href='/admin/:id/addCategory') Add Category
-                    div(class="dropdown-divider")
-                    a(class="dropdown-item" href=user.url+'/logout') Logout
-                else 
-                  div(class="dropdown-menu dropdown-menu-end")
-                    a(class="dropdown-item" href='/users/login') Account Detail
-                    div(class="dropdown-divider")
-                    a(class="dropdown-item" href=user.url+'/logout') Logout
-              else 
-                  div(class="dropdown-menu dropdown-menu-end")
-                    a(class="dropdown-item" href='/users/login') Login
-                    div(class="dropdown-divider")
-                    a(class="dropdown-item" href='/users/register') Register
-
-    div(class='col-sm-10')
+    div(class="row justify-content-center")
+      div(class='col-sm-10')
           block content

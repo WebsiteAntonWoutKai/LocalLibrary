@@ -27,3 +27,7 @@ exports.index = (req, res) => {
         res.render("layout");
     }
 };
+
+exports.brandLogo = (req, res) => {
+    res.sendfile("images/brandLogo_white.png");
+};

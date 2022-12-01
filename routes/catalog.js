@@ -138,4 +138,6 @@ router.get('/user/login', user_controller.user_login_get);
 
 //router.post('/user/:id/addToCart', user_controller.user_addToCart_post);
 
+router.get('/images/brandLogo', home_controller.brandLogo)
+
 module.exports = router;

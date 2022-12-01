@@ -3,24 +3,39 @@ extends layout
 block content
     h1 All Items
 
-    form(action='', method='GET')
-        div
-            label Name: 
-            | &nbsp
-            input(type='text', name='name', value=`${name}` onfocus="this.value= ''")
-        div
-            label Price limit: 0 
-            | &nbsp
-            input(type='range', min = "0", max = "100", name='price', value=`${price}` id="range")
-            label 100 | &nbsp     
-            <span id="value">#{price}</span>
-        button(type='submit') Search
-        script(src='/javascripts/slider.js')
-    each item in items
-        li
-           | Name: #{item.name}
-           | Price: #{item.price}
-           | In stock: #{item.amountInStock}
-           br
-           a(href=item.url) 
-            <img height="150" width="100" src="#{item.imagePath}">
+    div(class="row")
+        div(class="col-4")
+            form(action='', method='GET')
+                input( class="form-control" type='text' name='name' placeholder="search" value=`${name}` onfocus="this.value= ''")
+        div(class="col")
+            div(class="dropdown float-end")
+                button(type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside") price
+                form(action='', method='GET' class="dropdown-menu p-2")
+                    label Price limit: 0
+                    | &nbsp
+                    input(type='range', min = "0", max = "100", name='price', value=`${price}` id="range")
+                    label 100 | &nbsp
+                    <span id="value">#{price}</span>
+                    button(type='submit') save
+                    script(src='/javascripts/slider.js')
+
+    // -var item = items[2];
+    //
+    // div(class="row my-4")
+    //     div(class="col-4")
+    //         div(class="card" style="width: 18rem;")
+    //             <img src="#{item.imagePath}">
+    //             div(class="card-body")
+    //                 h5(class="card-title") #{item.name}
+    //                 p € #{item.price}
+
+    div(class="row row-cols-md-3 row-cols-1 g-4 mt-4")
+        each item in items
+            div(class="col")
+                div(class="card h-100")
+                    <img class="card-img-top h-100" src="#{item.imagePath}">
+                    div(class="card-body")
+                        h5(class="card-title") #{item.name}
+                        p(class="card-text") € #{item.price}
+                        a(class="stretched-link" href=item.url)
+
