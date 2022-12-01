@@ -100,30 +100,20 @@ exports.item_detail = (req, res, next) => {
             //enkel als admin bezig is is update knop zichtbaar, anders niet
             if (req.session.userid) {
                 User.findById(req.session.userid).exec((err, found_user) => {
-                    if(err) {
+                    if (err) {
                         return next(err);
                     }
-                    if (found_user.isAdmin) {
-                        res.render("item_detail_admin", {
-                            name: results.item.name,
-                            item: results.item,
-                            user: User.findById(req.session.userid),
-                        });
-                    }
-                    else {
-                        res.render("item_detail", {
-                            name: results.item.name,
-                            item: results.item,
-                            user: User.findById(req.session.userid),
-                        });
-                    }
+                    res.render("item_detail", {
+                        name: results.item.name,
+                        item: results.item,
+                        user: found_user,
+                    });
                 })
             }
             else {
                 res.render("item_detail", {
                     name: results.item.name,
                     item: results.item,
-                    user: User.findById(req.session.userid),
                 });
             }
         }
@@ -438,19 +428,20 @@ exports.item_update_post = [
 exports.addToCart_get = function (req, res, next) {
     if (req.session.userid) {
         Item.findById(req.params.id).exec((err, found_item) => {
-            if (err) {
-                return next(err);
-            }
-            res.render("item_detail_addToCart", {
-                item: found_item,
-                user: User.findById(req.session.userid),
+            User.findById(req.session.userid).exec((err, found_user) => {
+                if (err) {
+                    return next(err);
+                }
+                res.render("item_detail_addToCart", {
+                    item: found_item,
+                    user: found_user,
+                })
             });
         })
     }
     else {
         res.render("login", { 
             title: "Login Before Adding Item To Cart.",
-            user: User.findById(req.session.userid),
         });
     }
 };

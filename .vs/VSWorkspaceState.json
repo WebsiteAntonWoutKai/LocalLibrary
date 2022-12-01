@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\public",
+    "\\views"
   ],
-  "SelectedNode": "\\C:\\Users\\deneu\\Source\\Repos\\LocalLibrary",
+  "SelectedNode": "\\app.js",
   "PreviewInSolutionExplorer": false
 }

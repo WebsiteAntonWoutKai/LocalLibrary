@@ -6,7 +6,7 @@ block content
     form(method='POST' action='')
         div.form-group
             label(for='email') Email: 
-            input#email.form-control(type='text', placeholder='Dwight.Schrute@DunderMifflin.com' name='email' required='true' value=(undefined===contact ? '' : contact.email))
+            input#email.form-control(type='text', placeholder='Dwight.Schrute@DunderMifflin.com' autofocus name='email' required='true' value=(undefined===contact ? '' : contact.email))
         div.form-group
             label(for='subject') Subject:
             input#subject.form-control(typr='text', placeholder='Other' name='subject' value=(undefined==contact ? '' : contact.subject))

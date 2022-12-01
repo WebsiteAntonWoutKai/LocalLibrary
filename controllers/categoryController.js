@@ -56,33 +56,22 @@ exports.category_detail = (req, res, next) => {
             }
             if (req.session.userid) {
                 User.findById(req.session.userid).exec((err, found_user) => {
-                    if(err) {
+                    if (err) {
                         return next(err);
                     }
-                    if (found_user.isAdmin) {
-                        res.render("category_detail_admin", {
-                            title: "Category Detail",
-                            category: results.category,
-                            category_items: results.category_items,
-                            user: User.findById(req.session.userid),
-                        });
-                    }
-                    else {
-                        res.render("category_detail", {
-                            title: "Category Detail",
-                            category: results.category,
-                            category_items: results.category_items,
-                            user: User.findById(req.session.userid),
-                        });
-                    }
-                })
+                    res.render("category_detail", {
+                        title: "Category Detail",
+                        category: results.category,
+                        category_items: results.category_items,
+                        user: found_user,
+                    });
+                })   
             }
             else {
                 res.render("category_detail", {
                     title: "Category Detail",
                     category: results.category,
                     category_items: results.category_items,
-                    user: User.findById(req.session.userid),
                 });
             }
         }

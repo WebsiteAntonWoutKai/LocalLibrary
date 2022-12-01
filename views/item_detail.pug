@@ -16,5 +16,16 @@ block content
         dl Small: #{item.stockSmall}
 
     hr
-    p
-        a(href=item.url + '/addtocart') Add To Cart
+    if(user)
+        if(user.isAdmin)
+            p
+                a(href=item.adminUrl + '/delete') Delete item
+            p
+                a(href=item.adminUrl+ '/update') Update items
+
+        else
+            p  
+                a(href=item.url + '/addtocart') Add To Cart
+    else
+        p
+            a(href=item.url + '/addtocart') Add to Cart
