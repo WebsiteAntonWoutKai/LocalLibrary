@@ -441,7 +441,7 @@ exports.addToCart_get = function (req, res, next) {
     }
     else {
         res.render("login", { 
-            title: "Login Before Adding Item To Cart.",
+            error: "Log in Before Adding Item To Cart.",
         });
     }
 };

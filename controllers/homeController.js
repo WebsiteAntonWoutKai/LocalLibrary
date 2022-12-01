@@ -9,16 +9,16 @@ exports.index = (req, res) => {
                 return next(err);
             }
             if (found_user == null) {
-                res.render("layout");
+                res.render("home");
             }
             else {
-                res.render("layout", {
+                res.render("home", {
                     user: found_user,
                     })
             }
         })
     }
     else {
-        res.render("layout");
+        res.render("home");
     }
 };
