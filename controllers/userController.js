@@ -4,12 +4,15 @@ const { body, validationResult } = require("express-validator");
 
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const csrf = require('csurf');
+var csrfProtection = csrf();
 
 
 const crypto = require('crypto');
 const { Console } = require("console");
 const user = require("../models/user");
 const item = require("../models/item");
+const router = require("../routes/users");
 const authTokens = {};
 
 const getHashedPassword = (password) => {
@@ -85,7 +88,7 @@ exports.user_login_post = function (req, res) {
                 // No results.
                 res.render('login', {
                     error: "No account linked to this email.",
-                    messageClass: 'alert-danger'
+                    messageClass: 'alert-danger',
                 });
             }
             else {
@@ -104,7 +107,7 @@ exports.user_login_post = function (req, res) {
                 else {
                     res.render('login', {
                         error: "Wrong Password.",
-                        messageClass: 'alert-danger'
+                        messageClass: 'alert-danger',
                     });
                 }
             }
@@ -112,7 +115,9 @@ exports.user_login_post = function (req, res) {
 };
 
 exports.user_register_get = function (req, res, next) {
-    res.render("register_form", { title: "Register" });
+    res.render("register_form", { 
+        title: "Register",
+ });
 };
 
 exports.user_register_post = [
@@ -232,10 +237,7 @@ exports.user_register_post = [
                         return next(err);
                     }
                     // Successful - redirect to login page.
-                    res.render('login', {
-                    message: 'Registration Complete. Please login to continue.',
-                    messageClass: 'alert-success'
-                    });
+                    res.redirect("/users/login");
                 });
             };
         });
@@ -243,7 +245,7 @@ exports.user_register_post = [
     else {
         res.render('register_form', {
             message: 'Password does not match.',
-            messageClass: 'alert-danger'
+            messageClass: 'alert-danger',
         });
     }
 }];
@@ -295,6 +297,15 @@ exports.user_list = function (req, res, next) {
 
 // Display detail page for a specific User.
 exports.user_detail = (req, res, next) => {
+    /*
+    (req, res, next) => {
+        if (!Array.isArray(req.body.shoppingCart.items)) {
+            req.body.shoppingCart.items =
+                typeof req.body.shoppingCart.items === "undefined" ? [] : [req.body.shoppingCart.items];
+        }
+        next();
+    },
+    */
     async.parallel(
         {
             user(callback) {
@@ -481,6 +492,92 @@ exports.user_update_post = [
         }
     },
 ];
+
+exports.user_clear_cart = function (req, res, next) {
+    User.findById(req.params.id, function (err, found_user) {
+        if (err) {
+            return next(err);
+        }
+        if (found_user == null) {
+            // No results.
+            var err = new Error("User not found");
+            err.status = 404;
+            return next(err);
+        }
+        // Success.
+        found_user.clearCart();
+        res.redirect(found_user.url);
+    })
+};
+
+exports.user_cart_detail_get = function (req, res, next) {
+    User.findById(req.params.id, function (err, found_user) {
+        if (err) {
+            return next(err);
+        }
+        if (found_user == null) {
+            // No results.
+            var err = new Error("User not found");
+            err.status = 404;
+            return next(err);
+        }
+        var totalPriceItems = found_user.getTotalPriceItems();
+        
+        // Success.
+        res.render("shoppingCart", {
+            user: found_user,
+            items: found_user.shoppingCart.items,
+            totalPriceItems: totalPriceItems,
+        })
+    })
+};
+
+exports.user_cart_detail_post = [
+    // Validate and santize fields.
+    //body("quantitiy")
+        //.trim,
+    body("shipping")
+        .trim(),
+
+    // Process request after validation and sanitization.
+    (req, res, next) => {
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            // There are errors. Render the form again with sanitized values and error messages.
+            res.render("shoppingCart", {
+                user: found_user,
+                items: found_user.shoppingCart.items,
+                errors: errors.array(),
+            });
+            return;
+        }
+        // Data from form is valid. Update the record.
+        User.findById(req.params.id).exec((err, found_user) => {
+            if (err) {
+                return next(err);
+            }
+            if (found_user == null) {
+                // No results.
+                var err = new Error("User not found");
+                err.status = 404;
+                return next(err);
+            }
+            var totalPriceItems = found_user.getTotalPriceItems();
+            var totalPrice = totalPriceItems + req.body.shipping;
+            // Success.
+            res.render("shoppingCart", {
+                user: found_user,
+                items: found_user.shoppingCart.items,
+                totalPriceItems: totalPriceItems,
+                totalPrice: totalPrice,
+            })
+        })
+    },
+];
+
+
 
 /*
 //misschien beter om dit in itemcontroller te zetten, dan is item al beschikbaar en kan user uit session gehaald worden

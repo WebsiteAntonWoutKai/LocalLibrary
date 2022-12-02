@@ -25,6 +25,7 @@ const UserSchema = new Schema({
           ref: "item",
           //required: true
         },
+        price: { type: Number },
         size: { type: String },
         quantity: { type: Number
           //required: true => anders werkt code om een of andere reden niet-> nog uitzoeken waarom
@@ -87,6 +88,7 @@ UserSchema.methods.addToCart = async function(item, amount, size) {
   } else {
     updatedCartItems.push({
       itemId: item._id,
+      price: item.price,
       size: sizeString,
       quantity: newQuantity,
     });
@@ -132,6 +134,23 @@ UserSchema.methods.clearCart = async function() {
   //cart legen
   this.shoppingCart = { items: [] };
   return await this.save();
+};
+
+UserSchema.methods.getTotalPriceItems = async function() {
+  let total = 0;
+  this.shoppingCart.items.forEach(element => {
+    Item.findById(element.itemId).exec((err, found_item) => {
+      if (err) {
+        return next(err);
+      }
+      if (found_item == null) {
+        console.log("Heh??");
+        return;
+      }
+      total = total + (element.price * element.quantity);
+    })
+  });
+  return total;
 };
 
 module.exports = mongoose.model("User", UserSchema);

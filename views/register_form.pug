@@ -3,7 +3,7 @@ extends layout
 block content
     h1=title
 
-    form(method='POST' action='')
+    form(method='POST' action='/users/register')
         div.form-group
             label(for='first_name') First Name:
             input#first_name.form-control(type='text', placeholder='First name (Christian)' name='first_name' autofocus required='true' value=(undefined===user ? '' : user.first_name) )
@@ -37,6 +37,7 @@ block content
             label(for='number') House Number:
             input#number.form-control(type='number', placeholder="House number" name='number' required='true', value=(undefined===user ? '' : user.number))
 
+        //input(type='hidden' name="_csrf" value=_csrf)
 
         button.btn.btn-primary(type='submit') Submit
 
