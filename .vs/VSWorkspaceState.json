@@ -1,7 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\models",
+    "\\public",
+    "\\public\\stylesheets",
+    "\\views"
   ],
-  "SelectedNode": "\\C:\\Users\\kai\\Source\\Repos\\LocalLibrary",
+  "SelectedNode": "\\public\\stylesheets\\style.css",
   "PreviewInSolutionExplorer": false
 }
