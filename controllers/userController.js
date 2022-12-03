@@ -11,8 +11,9 @@ var csrfProtection = csrf();
 const crypto = require('crypto');
 const { Console } = require("console");
 const user = require("../models/user");
-const item = require("../models/item");
+const Item = require("../models/item");
 const router = require("../routes/users");
+const { validateHeaderValue } = require("http");
 const authTokens = {};
 
 const getHashedPassword = (password) => {
@@ -510,8 +511,9 @@ exports.user_clear_cart = function (req, res, next) {
     })
 };
 
-exports.user_cart_detail_get = function (req, res, next) {
-    User.findById(req.params.id, function (err, found_user) {
+exports.user_cart_detail_get = async function (req, res, next) {
+    User.findById(req.params.id, async (err, found_user) => {
+        
         if (err) {
             return next(err);
         }
@@ -521,17 +523,39 @@ exports.user_cart_detail_get = function (req, res, next) {
             err.status = 404;
             return next(err);
         }
-        var totalPriceItems = found_user.getTotalPriceItems();
+
+        var itemsInCart = [];
+        var totalPriceItems = 0;
         
-        // Success.
-        res.render("shoppingCart", {
-            user: found_user,
-            items: found_user.shoppingCart.items,
-            totalPriceItems: totalPriceItems,
+        found_user.shoppingCart.items.forEach(async (element) => {
+            var quantitiy = element.quantity;
+            var size = element.size;
+            var price = element.price;
+            var name = element.name;
+            var imgPath = element.imgPath;
+                
+            totalPriceItems = totalPriceItems + (element.price * element.quantity);
+
+            itemsInCart.push({
+                name: name,
+                imagePath: imgPath,
+                price: price,
+                quantitiy: quantitiy,
+                size: size,
+            });
         })
+
+        console.log("test");
+        console.log(itemsInCart);
+        // Success.
+        res.render ("shoppingCart", {
+            user: found_user,
+            items: itemsInCart,
+            totalPrice: totalPriceItems,
+        })   
     })
 };
-
+/*
 exports.user_cart_detail_post = [
     // Validate and santize fields.
     //body("quantitiy")
@@ -564,19 +588,36 @@ exports.user_cart_detail_post = [
                 err.status = 404;
                 return next(err);
             }
-            var totalPriceItems = found_user.getTotalPriceItems();
-            var totalPrice = totalPriceItems + req.body.shipping;
+            const itemsInCart = [];
+            const totalPriceItems = 0;
+            found_user.shoppingCart.items.forEach(element => {
+                var quantitiy = element.quantitiy;
+                Item.findById(element.itemId).exec((err, found_item) => {
+                  if (err) {
+                    return next(err);
+                  }
+                  if (found_item == null) {
+                    console.log("Heh??");
+                    return;
+                  }
+                  itemsInCart.push({
+                    item: found_item,
+                    quantitiy: quantitiy,
+                  });
+                  totalPriceItems = totalPriceItems + (element.price * element.quantity);
+                })
+            })
             // Success.
             res.render("shoppingCart", {
                 user: found_user,
-                items: found_user.shoppingCart.items,
-                totalPriceItems: totalPriceItems,
-                totalPrice: totalPrice,
+            items: itemsInCart,
+            totalPrice: totalPriceItems,
+            totalIncShipping: totalPriceItems + req.body.shipping,
             })
         })
     },
 ];
-
+*/
 
 
 /*

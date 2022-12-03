@@ -16,22 +16,21 @@ block content
                         each item in items
                             .row.mb-4.d-flex.justify-content-between.align-items-center
                                 .col-md-2.col-lg-2.col-xl-2
-                                    img.img-fluid.rounded-3(src='#{script.getPath(item.itemId)}')
+                                    img.img-fluid.rounded-3(src="#{item.imagePath}")
                                 .col-md-3.col-lg-3.col-xl-3
-                                    h6.text-black.mb-0 #{item.itemId.name}
-                                    h6.text-muted #{script.getName(item.itemId)}
+                                    h6.text-black.mb-0 #{item.name}
+                                    h6.text-muted #{(item.itemId)}
                                 .col-md-3.col-lg-3.col-xl-2.d-flex
-                                    button.btn.btn-link.px-2(onclick="this.parentNode.querySelector('input[type=number]').stepDown()")
+                                    button.btn.btn-link.px-2(href="/item/:id/removeOne") -1
                                         i.fas.fa-minus
-                                    input#form1.form-control.form-control-sm(min='0' name='quantity' value='1' type='number')
-                                    button.btn.btn-link.px-2(onclick="this.parentNode.querySelector('input[type=number]').stepUp()")
+                                    h5.text-black.mb-0 #{item.quantity}
+                                    button.btn.btn-link.px-2(href="/item/:id/addOne") +1
                                         i.fas.fa-plus
                                 .col-md-3.col-lg-2.col-xl-2.offset-lg-1
                                     h6.mb-0 &euro; #{item.price}
                                 .col-md-1.col-lg-1.col-xl-1.text-end
                                     a.text-muted(href='#!')
                                         i.fas.fa-times
-                            script(src='/javascripts/shoppingCart.js')
                         hr.my-4
                         .pt-5
                             h6.mb-0
@@ -43,7 +42,7 @@ block content
                   h3.fw-bold.mb-5.mt-2.pt-1 Summary
                   hr.my-4
                   .d-flex.justify-content-between.mb-4
-                    h5 &euro; #{totalPriceItems}
+                    h5 &euro; #{totalPrice}
                   h5.text-uppercase.mb-3 Shipping
                   .mb-4.pb-2
                   form(method='POST' action='select')
@@ -55,4 +54,4 @@ block content
                   hr.my-4
                   .d-flex.justify-content-between.mb-5
                     h5.text-uppercase Total price
-                    h5 &euro; #{totalPrice}
+                    h5 &euro; #{totalIncShipping}

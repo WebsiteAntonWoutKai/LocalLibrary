@@ -120,6 +120,41 @@ exports.item_detail = (req, res, next) => {
       );
 };
 
+exports.item_detail_cart = (req, res, next) => {
+    Item.findById(req.params.id).exec((err, found_item) => {
+        if (err) {
+            return next(err);
+        }
+        if (found_item == null) {
+            //no resulsts
+            const err = new Error("Item not found");
+            err.status = 404;
+            return next(err);
+        }
+        res.send({
+            imagePath: found_item.imagePath,
+            category: found_item.category,
+            name: found_item.name,
+        })
+    })
+};
+
+exports.get_imagePath = (req, res, next) => {
+    Item.findById(req.params.id).exec((err, found_item) => {
+        if (err) {
+            return next(err);
+        }
+        if (found_item == null) {
+            //no resulsts
+            const err = new Error("Item not found");
+            err.status = 404;
+            return next(err);
+        }
+        
+        return found_item.imagePath;
+    })
+}
+
 
 exports.item_create_get = (req, res, next) => {
     async.parallel(
@@ -496,3 +531,131 @@ exports.addToCart_post = [
     }
     
 ];
+
+exports.addOneItem = async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        // There are errors. Render form again with sanitized values/errors messages.
+        res.render("shoppingCart", {
+            item: req.body,
+            user: User.findById(req.session.userid),
+            errors: errors.array(),
+        });
+        return;
+    }
+    async.parallel(
+        {
+            user(callback) {
+                User.findById(req.session.userid).exec(callback);
+            },
+            item(callback) {
+                Item.findById(req.params.id).exec(callback);
+            },
+        },
+        (err, results) => {
+            console.log("test");
+            if (err) {
+                return next(err);
+            }
+            if (results.user == null) {
+                // No results.
+                const err = new Error("No session in progress.");
+                err.status = 404;
+                return next(err);
+            }
+            console.log(req.body.size + " test");
+            results.item.lowerStock(req.body.size, 1),
+            results.user.addToCart(results.item, 1, req.body.size),
+
+            next();
+        }
+    )
+};
+
+exports.removeOneItem = async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        // There are errors. Render form again with sanitized values/errors messages.
+        res.render("shoppingCart", {
+            item: req.body,
+            user: User.findById(req.session.userid),
+            errors: errors.array(),
+        });
+        return;
+    }
+    async.parallel(
+        {
+            user(callback) {
+                User.findById(req.session.userid).exec(callback);
+            },
+            item(callback) {
+                Item.findById(req.params.id).exec(callback);
+            },
+        },
+        (err, results) => {
+            console.log("test");
+            if (err) {
+                return next(err);
+            }
+            if (results.user == null) {
+                // No results.
+                const err = new Error("No session in progress.");
+                err.status = 404;
+                return next(err);
+            }
+            console.log(req.body.size + " test");
+            results.item.UpStock(req.body.size, 1),
+            results.user.lowerQuantityItem(results.item, 1, req.body.size),
+
+            next();
+            
+        }
+    )
+    
+};
+
+exports.removeItem = async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        // There are errors. Render form again with sanitized values/errors messages.
+        res.render("shoppingCart", {
+            item: req.body,
+            user: User.findById(req.session.userid),
+            errors: errors.array(),
+        });
+        return;
+    }
+    async.parallel(
+        {
+            user(callback) {
+                User.findById(req.session.userid).exec(callback);
+            },
+            item(callback) {
+                Item.findById(req.params.id).exec(callback);
+            },
+        },
+        (err, results) => {
+            console.log("test");
+            if (err) {
+                return next(err);
+            }
+            if (results.user == null) {
+                // No results.
+                const err = new Error("No session in progress.");
+                err.status = 404;
+                return next(err);
+            }
+            console.log(req.body.size + " test");
+            
+            results.user.RemoveItem(results.item, req.body.size),
+            results.item.UpStock(req.body.size, req.body.amount),
+
+            next();
+            
+        }
+    )
+    
+};

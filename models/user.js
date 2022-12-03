@@ -25,6 +25,8 @@ const UserSchema = new Schema({
           ref: "item",
           //required: true
         },
+        name: { type: String },
+        imgPath: { type: String },
         price: { type: Number },
         size: { type: String },
         quantity: { type: Number
@@ -79,6 +81,7 @@ UserSchema.methods.addToCart = async function(item, amount, size) {
 
   let newQuantity = amount * 1;
   let sizeString = "" + size;
+  let imgPath = item.imgPath;
 
   const updatedCartItems = [...this.shoppingCart.items];
 
@@ -91,6 +94,8 @@ UserSchema.methods.addToCart = async function(item, amount, size) {
       price: item.price,
       size: sizeString,
       quantity: newQuantity,
+      imgPath: imgPath,
+      name: item.name
     });
   }
 
@@ -101,8 +106,35 @@ UserSchema.methods.addToCart = async function(item, amount, size) {
   return await this.save();
 };
 
-//code nog fixen
-UserSchema.methods.removeFromCart = async function(cartId) {
+UserSchema.methods.lowerQuantityItem = async function(item, amount, size) {
+  const findIndexOfItem = (element) => {
+    var sizeString = "" + size;     //omdat toString niet werkt
+    var elementIdString = "" + element.itemId;
+    var itemIdSize = "" + element.size; 
+    var itemIdString = "" + item._id;
+    return (itemIdString === elementIdString) && (sizeString === itemIdSize);
+  }
+  //kijken als item al in cart zit, zo ja haal op waar
+  const cartItemIndex = this.shoppingCart.items.findIndex(findIndexOfItem);
+
+  let newQuantity = amount * 1;
+
+  const updatedCartItems = [...this.shoppingCart.items];
+
+  if (cartItemIndex >= 0) {
+    newQuantity = this.shoppingCart.items[cartItemIndex].quantity - amount * 1;
+    updatedCartItems[cartItemIndex].quantity = newQuantity;
+  }
+
+  const updatedCart = {
+    items: updatedCartItems
+  };
+  this.shoppingCart = updatedCart;
+  return await this.save();
+};
+
+
+UserSchema.methods.removeItemFromCart = async function(item, amount, size) {
   const updatedCartItems = this.shoppingCart.items.filter(item => {
     var itemIdString = "" + item.itemId;  //omdat toString niet werkt
     var cartIdString = "" + cartId;
