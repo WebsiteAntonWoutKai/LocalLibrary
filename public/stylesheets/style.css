@@ -89,3 +89,8 @@ body {
 .navbar .nav-item .nav-link:hover::before{
     transform: scale(1);
 }
+
+.embedsocial-hashtag{
+    position: fixed;
+    left: 10%;
+}
