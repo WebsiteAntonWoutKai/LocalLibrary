@@ -1,6 +1,6 @@
 let popUp = document.getElementById("cookiePopup");
 document.getElementById("acceptCookie").
     addEventListener("click", () => {
-        popUp.classList.add("hide");
-        popUp.classList.remove("show")
+        popUp.classList.add("hideCookie");
+        popUp.classList.remove("showCookie")
     });

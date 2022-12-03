@@ -134,12 +134,12 @@ body {
 #cookiePopup a{
     color: #6859fe;
 }
-.hide {
+.hideCookie {
     visibility: hidden;
     bottom: 0;
     right: 2em;
 }
-.show{
+.showCookie{
     visibility: visible;
     bottom: 2em;
     right: 2em;
