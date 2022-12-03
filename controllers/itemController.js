@@ -532,7 +532,8 @@ exports.addToCart_post = [
     
 ];
 
-exports.addOneItem = async (req, res) => {
+exports.addOneItem = (req, res, next) => {
+    /*
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -543,28 +544,34 @@ exports.addOneItem = async (req, res) => {
             errors: errors.array(),
         });
         return;
-    }
+    }*/
+    console.log(req.body);
     async.parallel(
         {
             user(callback) {
                 User.findById(req.session.userid).exec(callback);
             },
             item(callback) {
-                Item.findById(req.params.id).exec(callback);
+                Item.findById(req.body.itemId).exec(callback);
             },
         },
         (err, results) => {
-            console.log("test");
+            
             if (err) {
-                return next(err);
+                console.log("error");
+                console.log(results);
+                return (err);
             }
             if (results.user == null) {
                 // No results.
+                console.log("No Session In Progress.");
                 const err = new Error("No session in progress.");
                 err.status = 404;
-                return next(err);
+                return err;
             }
-            console.log(req.body.size + " test");
+            console.log("test2");
+            console.log(results);
+            console.log(req.body.size);
             results.item.lowerStock(req.body.size, 1),
             results.user.addToCart(results.item, 1, req.body.size),
 

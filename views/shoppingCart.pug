@@ -15,22 +15,26 @@ block content
                         hr.my-4
                         each item in items
                             .row.mb-4.d-flex.justify-content-between.align-items-center
-                                .col-md-2.col-lg-2.col-xl-2
+                                //.col-md-2.col-lg-2.col-xl-2
                                     img.img-fluid.rounded-3(src="#{item.imagePath}")
                                 .col-md-3.col-lg-3.col-xl-3
-                                    h6.text-black.mb-0 #{item.name}
-                                    h6.text-muted #{(item.itemId)}
+                                  h6.text-black.mb-0 #{item.name}
+                                  h6.text-muted #{(item.itemId)}
                                 .col-md-3.col-lg-3.col-xl-2.d-flex
-                                    button.btn.btn-link.px-2(href="/item/:id/removeOne") -1
-                                        i.fas.fa-minus
-                                    h5.text-black.mb-0 #{item.quantity}
-                                    button.btn.btn-link.px-2(href="/item/:id/addOne") +1
-                                        i.fas.fa-plus
+                                  - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
+                                  button.btn.btn-primary(type="button" id="removeOne" onclick="removeOne(#{item.itemId},#{item.size})") -1
+                                  
+                                  h5.text-black.mb-0 #{item.quantity}
+                                  <span id="quantity">#{quantity}</span>
+                                  
+                                  - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
+                                  button.btn.btn-primary(type="button" id="addOne" itemId=item.itemId size=item.size ) +1
                                 .col-md-3.col-lg-2.col-xl-2.offset-lg-1
-                                    h6.mb-0 &euro; #{item.price}
+                                  h6.mb-0 &euro; #{item.price}
                                 .col-md-1.col-lg-1.col-xl-1.text-end
-                                    a.text-muted(href='#!')
-                                        i.fas.fa-times
+                                  a.text-muted(href='#!')
+                                      i.fas.fa-times
+                                script(type="module" src='/javascripts/shoppingCart.js')
                         hr.my-4
                         .pt-5
                             h6.mb-0

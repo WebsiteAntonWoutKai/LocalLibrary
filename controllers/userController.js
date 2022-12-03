@@ -528,7 +528,7 @@ exports.user_cart_detail_get = async function (req, res, next) {
         var totalPriceItems = 0;
         
         found_user.shoppingCart.items.forEach(async (element) => {
-            var quantitiy = element.quantity;
+            var quantity = element.quantity;
             var size = element.size;
             var price = element.price;
             var name = element.name;
@@ -537,10 +537,11 @@ exports.user_cart_detail_get = async function (req, res, next) {
             totalPriceItems = totalPriceItems + (element.price * element.quantity);
 
             itemsInCart.push({
+                itemId: element.itemId,
                 name: name,
                 imagePath: imgPath,
                 price: price,
-                quantitiy: quantitiy,
+                quantity: quantity,
                 size: size,
             });
         })
