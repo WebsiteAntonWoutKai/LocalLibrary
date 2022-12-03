@@ -72,6 +72,12 @@ router.get("/item/:id/addToCart", item_controller.addToCart_get);
 
 router.post("/item/:id/addToCart", item_controller.addToCart_post);
 
+router.post("/item/:id/addOne", item_controller.addOneItem);
+
+router.post("/item/:id/removeOne", item_controller.removeOneItem);
+
+router.post("/item/:id/remove", item_controller.removeItem);
+
 /// CONTACT ROUTES ///
 
 //niet allemaal nodig -> nog uitzoeken welke vervangen mogen worden
@@ -133,6 +139,8 @@ router.get('/user', user_controller.user_protected_get);
 router.get("/user/:id/logout", user_controller.user_logout_get);
 
 router.get('/user/login', user_controller.user_login_get);
+
+router.get('/user/:id/cart', user_controller.user_cart);
 
 //router.get('/user/:id/addToCart', user_controller.user_addToCart_get);
 
