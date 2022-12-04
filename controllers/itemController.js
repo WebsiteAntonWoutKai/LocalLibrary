@@ -480,7 +480,7 @@ exports.addToCart_get = function (req, res, next) {
                 if (err) {
                     return next(err);
                 }
-                res.render("item_detail_addToCart", {
+                res.render("item_detail", {
                     item: found_item,
                     user: found_user,
                 })
@@ -496,9 +496,7 @@ exports.addToCart_get = function (req, res, next) {
 
 exports.addToCart_post = [
     body("size").escape(),
-    body("amount")
-        .trim()
-        .isNumeric(),
+    body("itemId").escape(),
 
     (req, res, next) => {
 
@@ -506,7 +504,7 @@ exports.addToCart_post = [
 
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/errors messages.
-            res.render("item_detail_addToCart", {
+            res.render("item_detail", {
                 item: req.body,
                 user: User.findById(req.session.userid),
                 errors: errors.array(),
@@ -519,12 +517,12 @@ exports.addToCart_post = [
                     User.findById(req.session.userid).exec(callback);
                 },
                 item(callback) {
-                    Item.findById(req.params.id).exec(callback);
+                    Item.findById(req.body.itemId).exec(callback);
                 },
             },
             (err, results) => {
-                console.log("test");
                 if (err) {
+                    console.log("error");
                     return next(err);
                 }
                 if (results.user == null) {
@@ -534,15 +532,13 @@ exports.addToCart_post = [
                     return next(err);
                 }
                 console.log(req.body.size + " test");
-                results.item.lowerStock(req.body.size, req.body.amount),
-                results.user.addToCart(results.item, req.body.amount, req.body.size),
-                
-                res.redirect(results.user.url);
+                results.item.lowerStock(req.body.size, 1);
+                results.user.addToCart(results.item, 1, req.body.size);
+                res.redirect(results.user.url + "/cart");
             }
         )
         
     }
-    
 ];
 
 exports.addOneItem = (req, res, next) => {
@@ -572,7 +568,7 @@ exports.addOneItem = (req, res, next) => {
             
             if (err) {
                 console.log("error");
-                console.log(results);
+                //console.log(results);
                 return (err);
             }
             if (results.user == null) {
@@ -582,18 +578,15 @@ exports.addOneItem = (req, res, next) => {
                 err.status = 404;
                 return err;
             }
-            console.log("test2");
-            console.log(results);
-            console.log(req.body.size);
+            
             results.item.lowerStock(req.body.size, 1),
             results.user.addToCart(results.item, 1, req.body.size),
-
-            next();
+            console.log("added one item instance");
         }
     )
 };
 
-exports.removeOneItem = async (req, res) => {
+exports.removeOneItem = async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -611,32 +604,31 @@ exports.removeOneItem = async (req, res) => {
                 User.findById(req.session.userid).exec(callback);
             },
             item(callback) {
-                Item.findById(req.params.id).exec(callback);
+                Item.findById(req.body.itemId).exec(callback);
             },
         },
         (err, results) => {
             console.log("test");
             if (err) {
-                return next(err);
+                console.log("error");
+                return err;
             }
             if (results.user == null) {
                 // No results.
+                console.log("No Session In Progress.")
                 const err = new Error("No session in progress.");
                 err.status = 404;
-                return next(err);
+                return err;
             }
-            console.log(req.body.size + " test");
-            results.item.UpStock(req.body.size, 1),
-            results.user.lowerQuantityItem(results.item, 1, req.body.size),
-
-            next();
-            
+            results.item.upStock(req.body.size, 1);
+            results.user.lowerQuantityItem(results.item, 1, req.body.size);
+            console.log("removed one item instance");
         }
     )
     
 };
 
-exports.removeItem = async (req, res) => {
+exports.removeItem = async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -654,7 +646,7 @@ exports.removeItem = async (req, res) => {
                 User.findById(req.session.userid).exec(callback);
             },
             item(callback) {
-                Item.findById(req.params.id).exec(callback);
+                Item.findById(req.body.itemId).exec(callback);
             },
         },
         (err, results) => {
@@ -669,9 +661,11 @@ exports.removeItem = async (req, res) => {
                 return next(err);
             }
             console.log(req.body.size + " test");
+
+            amount = results.user.getQuantity(req.body.itemId, req.body.size);
             
-            results.user.RemoveItem(results.item, req.body.size),
-            results.item.UpStock(req.body.size, req.body.amount),
+            results.user.removeItem(results.item, req.body.size),
+            results.item.upStock(req.body.size, amount),
 
             next();
             

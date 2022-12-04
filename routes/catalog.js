@@ -146,6 +146,7 @@ router.get('/user/login', user_controller.user_login_get);
 
 router.get('/user/:id/cart', user_controller.user_cart);
 
+//router.get('/user/:id/shoppingCart', user_controller.user_cart_detail_get);
 
 //router.post('/user/:id/shoppingCart', user_controller.user_cart_detail_post);
 
