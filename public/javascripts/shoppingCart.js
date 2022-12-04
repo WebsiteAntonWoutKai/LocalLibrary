@@ -58,19 +58,15 @@ $(document).ready(function(itemId, size, quantity){
 //     item.
 // });
 
-// function upQuantity(itemId) {
-//     document.querySelectorAll("quantity").forEach(item => {
-//         if(item.getAttribute("itemId") === itemId) {
-//             document.getElementsByName(itemId).value = parseInt(document.getElementsByName(itemId).value) + 1;
-//         }
-//     })
-// };
-// function downQuantity(itemId) {
-//     document.getElementsByName(itemId).value = parseInt(document.getElementsByName(itemId).value) - 1;
-//     if (document.getElementsByName(itemId).value <= 1) {
-//         document.getElementsByName(itemId).value = 1;
-//     }       
-// };
+function upQuantity(itemId) {
+    document.getElementById("quantity").value = parseInt(document.getElementById("quantity").value) + 1;
+};
+function downQuantity(itemId) {
+    document.getElementById("quantity").value = parseInt(document.getElementById("quantity").value) - 1;
+    if (document.getElementById("quantity").value <= 1) {
+        document.getElementById("quantity").value = 1;
+    }       
+};
 
 // document.querySelectorAll("quantity").forEach(item => {
 //     item.addEventListener("upQuantity", (event) => {
@@ -89,7 +85,7 @@ document.querySelectorAll("#addOne").forEach(item => {
     item.addEventListener("click", (event) => {
         var itemId = event.target.getAttribute("itemId");
         var size = event.target.getAttribute("size");
-        document.getElementsByName("name").value = parseInt(document.getElementById("quantity").value) + 1;
+        upQuantity(itemId);
         const httpRequest = new XMLHttpRequest();
         httpRequest.open("POST", '/catalog/item/' + `itemId` + '/addOne', true);
         httpRequest.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
@@ -114,8 +110,8 @@ document.querySelectorAll("#removeOne").forEach(item => {
         
         var itemId = event.target.getAttribute("itemId");
         var size = event.target.getAttribute("size");
-        const downEvent = new Event("downQuantity");
-        //downQuantity(itemId);
+        //const downEvent = new Event("downQuantity");
+        downQuantity(itemId);
         //console.log(event.target.value);
         document.getElementById("quantity").value = parseInt(document.getElementById("quantity").value) - 1;
         if (document.getElementById("quantity").value <= 1) {

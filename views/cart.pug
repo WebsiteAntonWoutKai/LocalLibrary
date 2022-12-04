@@ -23,7 +23,7 @@ block content
                                 .col-md-3.col-lg-3.col-xl-2.d-flex
                                     - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
                                     button.btn.btn-primary(type="button" id="removeOne" itemId=item.itemId size=item.size ) -1
-                                    input#quantity.form-control.input-number(type='Button' name=item.itemId min=1 value=item.quantity itemId=item.itemId)
+                                    input#quantity.form-control.input-number(type='Button' min=1 value=item.quantity itemId=item.itemId)
                                     - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
                                     button.btn.btn-primary(type="button" id="addOne" itemId=item.itemId size=item.size ) +1 
                                 .col-md-3.col-lg-2.col-xl-2.offset-lg-1
