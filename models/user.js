@@ -168,6 +168,12 @@ UserSchema.methods.clearCart = async function() {
   return await this.save();
 };
 
+UserSchema.methods.clearCart_checkout = async function () {
+    console.log(this.shoppingCart)
+    this.shoppingCart = { items: [] };
+    return await this.save();
+};
+
 UserSchema.methods.getTotalPriceItems = async function() {
   let total = 0;
   this.shoppingCart.items.forEach(element => {

@@ -148,6 +148,10 @@ router.get('/user/:id/cart', user_controller.user_cart);
 
 router.get('/user/:id/clearcart', user_controller.user_clear_cart);
 
+router.get('/user/:id/checkout', user_controller.user_checkout);
+
+router.post('/user/:id/checkout', user_controller.user_checkout_post);
+
 //router.get('/user/:id/addToCart', user_controller.user_addToCart_get);
 
 //router.post('/user/:id/addToCart', user_controller.user_addToCart_post);

@@ -49,7 +49,6 @@ exports.user_login_get = function (req, res, next) {
             }
             if (found_user == null) {
                 // No results.
-
                 req.session.destroy(err => {
                     if (err) {
                         return next(err);
@@ -548,5 +547,82 @@ exports.user_cart= async function (req, res, next) {
         }))
     })
 };
+
+exports.user_checkout = function (req, res, next) {
+    if (req.session.userid) {
+        User.findById(req.session.userid).exec((err, found_user) => {
+            if (err) {
+                return next(err);
+            }
+            var itemsInCart = [];
+            var totalPriceItems = 0;
+            return Promise.all(found_user.shoppingCart.items.map((element) => {
+                return Item.findById(element.itemId).then((found_item) => {
+                    var name = found_item.name;
+                    var imgPath = found_item.imagePath;
+                    itemsInCart.push({
+                        size: element.size,
+                        itemId: element.itemId,
+                        price: element.price,
+                        name: name,
+                        imgPath: imgPath,
+                        quantity: element.quantity,
+                    });
+                    totalPriceItems = totalPriceItems + element.price * element.quantity
+                })
+            })).then(() => res.render("checkout", {
+                user: found_user,
+                items: itemsInCart,
+                totalPrice: totalPriceItems,
+                totalIncShipping: totalPriceItems + 5.70,
+            }))
+        })
+    }
+    else {
+        res.render("login", {
+            error: "Log in before going to checkout",
+        });
+    }
+}
+exports.user_checkout_post = function (req, res, next) {
+    if (req.session.userid) {
+        User.findById(req.session.userid).exec((err, found_user) => {
+            if (err) {
+                return next(err);
+            }
+            var totalPriceItems = 0;
+            var totalIncShipping = 0;
+            found_user.shoppingCart.items.forEach(async (element) => {
+                totalPriceItems = totalPriceItems + (element.price * element.quantity);
+                totalIncShipping = totalPriceItems + 5.70
+            })
+            var stripe = require("stripe")(
+                "sk_test_51MAz7fE5LDZRk1E0TiGvlxHki1gyCM7nrk88LH1Ar0eH1hrWmtNtryY0grjw8ERrKNsuyqP8bTYHfF0Zv4X2UP5O00oWnBz8ut"
+            )
+            stripe.charges.create({
+                amount: totalIncShipping * 100,
+                currency: "eur",
+                source: req.body.stripeToken, // obtained with Stripe.js
+                description: "Test Charge"
+
+            }, function (err, charge) {
+                if (err) {
+                    return res.render("checkout", {
+                            user: found_user,
+                            totalPrice: totalPriceItems,
+                            totalIncShipping: totalPriceItems + 5.70,
+                            error: err.message
+                    })
+                }
+                res.redirect("/catalog");
+            });
+        });
+    }
+    else {
+        res.render("login", {
+            error: "Log in before going to checkout",
+        });
+    }
+}
 
 

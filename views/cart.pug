@@ -43,11 +43,18 @@ block content
                   h3.fw-bold.mb-5.mt-2.pt-1 Summary
                   hr.my-4
                   .d-flex.justify-content-between.mb-4
-                    h5 Item subtotal: &euro; #{totalPrice}
-                  h5.text.mb-3 Shipping:  &euro; 5,70
+                    h5 Item subtotal: 
+                    h5 &euro; #{totalPrice}
+                  .d-flex.justify-content-between.mb-4
+                    h5.text.mb-3 Shipping: 
+                    h5 &euro; 5,70
+
 
                   hr.my-4
                   .d-flex.justify-content-between.mb-5
-                    h5.text-uppercase Total price
+                    h5.text-uppercase Total price:
                     h5 &euro; #{totalIncShipping}
+                  <a href= "checkout">
+                    button.btn.btn-primary(type="button" id="checkout" ) Checkout
+                  </a>
                     
