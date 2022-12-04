@@ -512,7 +512,6 @@ exports.user_clear_cart = function (req, res, next) {
 
 exports.user_cart= async function (req, res, next) {
     User.findById(req.params.id, async (err, found_user) => {
-
         if (err) {
             return next(err);
         }
@@ -525,35 +524,26 @@ exports.user_cart= async function (req, res, next) {
         var itemsInCart = [];
         var totalPriceItems = 0;
         var totalIncShipping = 0;
-        found_user.shoppingCart.items.forEach(async (element) => {
-            Item.findById(element.itemId, async (err, found_item) => {
-                var quantity = element.quantity;
-                var size = element.size;
-                var price = found_item.price;
+
+        return Promise.all(found_user.shoppingCart.items.map((element) => {
+            return Item.findById(element.itemId).then((found_item) => {
                 var name = found_item.name;
                 var imgPath = found_item.imagePath;
-
-                totalPriceItems = totalPriceItems + (price * quantity);
-                totalIncShipping = totalPriceItems + 5.70
-
                 itemsInCart.push({
                     itemId: element.itemId,
+                    price: element.price,
                     name: name,
                     imgPath: imgPath,
-                    price: price,
-                    quantity: quantity,
-                    size: size,
+                    quantity: element.quantity,
                 });
-
-                // Success.
-                res.render("cart", {
-                    user: found_user,
-                    items: itemsInCart,
-                    totalPrice: totalPriceItems,
-                    totalIncShipping: totalIncShipping,
-                })
+                totalPriceItems = totalPriceItems + element.price * element.quantity
             })
-        })
+        })).then(() => res.render("cart", {
+            user: found_user,
+            items: itemsInCart,
+            totalPrice: totalPriceItems,
+            totalIncShipping: totalPriceItems + 5.7,
+        }))
     })
 };
 /*
