@@ -14,7 +14,7 @@ function saveImage(item, imageEncoded) {
     }
 }
 exports.item_list = async (req, res) => {
-
+    let category = null
     let query = Item.find()
     if (req.query.name != null && req.query.name != '') {
         query = query.regex('name', new RegExp(req.query.name, 'i'))
@@ -22,8 +22,13 @@ exports.item_list = async (req, res) => {
     if (req.query.price != null && req.query.price != '') {
         query = query.lte('price',req.query.price)
     }
+    if(req.query.category != null && req.query.category != '') {
+        category = req.query.category
+        query = Item.find({ category: category })
+    }
     try {
-        const items = await query.exec()
+        const categories = await Category.find().exec();
+        const items = await query.exec();
         if (req.session.userid) {
             User.findById(req.session.userid).exec((err, found_user) => {
                 if (err) {
@@ -32,9 +37,11 @@ exports.item_list = async (req, res) => {
                 if (req.query.name === undefined) {
                     res.render('item_list', {
                         items: items,
-                        name: 'Search for an item',
+                        name: '',
                         price: '0',
                         user: found_user,
+                        categories: categories,
+                        current_category: category,
                     })
                 }
                 else {
@@ -43,6 +50,8 @@ exports.item_list = async (req, res) => {
                         name: req.query.name,
                         price: req.query.price,
                         user: found_user,
+                        categories: categories,
+                        current_category: category,
                     })
                 }
             })
@@ -51,8 +60,10 @@ exports.item_list = async (req, res) => {
             if (req.query.name === undefined) {
                 res.render('item_list', {
                     items: items,
-                    name: 'Search for an item',
+                    name: '',
                     price: '0',
+                    categories: categories,
+                    current_category: category,
                 })
             }
             else {
@@ -60,6 +71,8 @@ exports.item_list = async (req, res) => {
                     items: items,
                     name: req.query.name,
                     price: req.query.price,
+                    categories: categories,
+                    current_category: category,
                 })
             }
         }

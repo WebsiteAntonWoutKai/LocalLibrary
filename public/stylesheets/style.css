@@ -7,15 +7,8 @@
 .form-control-dark {
   border-color: var(--bs-gray);
 }
-
-html,
-body {
-  height: 100%;
-}
-body {
-  padding-top: 40px;
-  padding-bottom: 40px;
-  background-color: grey;
+.brandLogo{
+    width: 100px;
 }
 .form-signin {
   width: 100%;
@@ -61,14 +54,9 @@ body {
     font-size: inherit;
 }
 
-.navbar{
-    background-color: #1B1C22;
-}
-.navbar a{
-    color: #E6E6E6;
-}
+
 .navbar .nav-item{
-    margin-left: 45px;
+    margin-left: 30px;
 }
 .navbar .nav-item .nav-link{
     padding: 5px;
@@ -88,9 +76,4 @@ body {
 .navbar .nav-item .nav-link.active::before,
 .navbar .nav-item .nav-link:hover::before{
     transform: scale(1);
-}
-
-.embedsocial-hashtag{
-    position: fixed;
-    left: 10%;
 }
