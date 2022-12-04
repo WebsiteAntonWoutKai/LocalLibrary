@@ -614,6 +614,7 @@ exports.user_checkout_post = function (req, res, next) {
                             error: err.message
                     })
                 }
+                found_user.clearCart_checkout();
                 res.redirect("/catalog");
             });
         });

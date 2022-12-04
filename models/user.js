@@ -123,21 +123,29 @@ UserSchema.methods.lowerQuantityItem = async function(item, amount, size) {
 
   if (cartItemIndex >= 0) {
     newQuantity = this.shoppingCart.items[cartItemIndex].quantity - amount * 1;
-    updatedCartItems[cartItemIndex].quantity = newQuantity;
+    if (newQuantity === 0) {
+      this.removeItemFromCart(item)
+      return;
+    }
+    else {
+      updatedCartItems[cartItemIndex].quantity = newQuantity;
+    }
   }
 
   const updatedCart = {
     items: updatedCartItems
   };
   this.shoppingCart = updatedCart;
+
   return await this.save();
+
 };
 
 
 UserSchema.methods.removeItemFromCart = async function(item, amount, size) {
-  const updatedCartItems = this.shoppingCart.items.filter(item => {
+  const updatedCartItems = this.shoppingCart.items.filter(element => {
     var itemIdString = "" + item.itemId;  //omdat toString niet werkt
-    var cartIdString = "" + cartId;
+    var cartIdString = "" + element.itemId;
     return itemIdString !== cartIdString;
   });
 
