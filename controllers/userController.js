@@ -12,7 +12,6 @@ var csrfProtection = csrf();
 const crypto = require('crypto');
 const { Console } = require("console");
 const user = require("../models/user");
-const Item = require("../models/item");
 const router = require("../routes/users");
 const { validateHeaderValue } = require("http");
 const authTokens = {};
@@ -525,6 +524,7 @@ exports.user_cart= async function (req, res, next) {
         }
         var itemsInCart = [];
         var totalPriceItems = 0;
+        var totalIncShipping = 0;
         found_user.shoppingCart.items.forEach(async (element) => {
             Item.findById(element.itemId, async (err, found_item) => {
                 var quantity = element.quantity;
@@ -534,6 +534,8 @@ exports.user_cart= async function (req, res, next) {
                 var imgPath = found_item.imagePath;
 
                 totalPriceItems = totalPriceItems + (price * quantity);
+                totalIncShipping = totalPriceItems + 5.70
+
                 itemsInCart.push({
                     itemId: element.itemId,
                     name: name,
@@ -548,6 +550,7 @@ exports.user_cart= async function (req, res, next) {
                     user: found_user,
                     items: itemsInCart,
                     totalPrice: totalPriceItems,
+                    totalIncShipping: totalIncShipping,
                 })
             })
         })
