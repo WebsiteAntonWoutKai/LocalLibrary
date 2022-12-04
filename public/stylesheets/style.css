@@ -132,10 +132,6 @@
     right: 2em;
 }
 
-body {
-    padding-top: 80px;
-}
-
 .show-cart li {
     display: flex;
 }
