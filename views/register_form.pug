@@ -38,8 +38,8 @@ block content
             input#number.form-control(type='number', placeholder="House number" name='number' required='true', value=(undefined===user ? '' : user.number))
 
         //input(type='hidden' name="_csrf" value=_csrf)
-
-        button.btn.btn-primary(type='submit') Submit
+        div.form-group.my-2
+            button.btn.btn-secondary(type='submit') Submit
 
     if errors
         ul
