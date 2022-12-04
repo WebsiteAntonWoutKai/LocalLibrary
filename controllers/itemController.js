@@ -527,8 +527,7 @@ exports.addToCart_post = [
                 }
                 if (results.user == null) {
                     // No results.
-                    const err = new Error("No session in progress.");
-                    err.status = 404;
+                    res.redirect("/users/login");
                     return next(err);
                 }
                 console.log(req.body.size + " test");
