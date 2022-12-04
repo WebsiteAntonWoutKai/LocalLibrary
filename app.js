@@ -10,7 +10,9 @@ const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 const session = require('express-session')
 const mongoDBStore = require("connect-mongodb-session")(session);
-//const csrf = require("csurf");
+
+//const csrf = require('csurf');
+//var csrfProtection = csrf();
 
 const User = require("./models/user");
 
@@ -41,8 +43,6 @@ const storeSessions = new mongoDBStore ({
   collection: "sessions"
 });
 
-//const csrfProtection = csrf();
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -72,11 +72,11 @@ const oneDay = 1000 * 60 * 60 * 24;
 app.use(session({
     secret: crypto.randomBytes(20).toString("hex"),
     saveUninitialized:false,
-    cookie: { maxAge: oneDay },
+    cookie: { maxAge: oneDay, httpOnly: true },
     resave: false,
     store: storeSessions,
 }));
-//app.use(csrfProtection);
+
 
 app.use(async (req, res, next) => {
   try {
@@ -94,6 +94,8 @@ app.use(async (req, res, next) => {
     throw new Error(err);
   }
 });
+
+//app.use(csrfProtection);
 
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;

@@ -65,6 +65,10 @@ router.get("/categories", category_controller.category_list);
 // GET request for one Item.
 router.get("/item/:id", item_controller.item_detail);
 
+router.get("/item/:id/cartDetail", item_controller.item_detail_cart);
+
+router.get("/item/:id/getImagePath", item_controller.get_imagePath);
+
 // GET request for list of all Item.
 router.get("/items", item_controller.item_list);
 
@@ -141,6 +145,12 @@ router.get("/user/:id/logout", user_controller.user_logout_get);
 router.get('/user/login', user_controller.user_login_get);
 
 router.get('/user/:id/cart', user_controller.user_cart);
+
+router.get('/user/:id/shoppingCart', user_controller.user_cart_detail_get);
+
+//router.post('/user/:id/shoppingCart', user_controller.user_cart_detail_post);
+
+router.get('/user/:id/clearcart', user_controller.user_clear_cart);
 
 //router.get('/user/:id/addToCart', user_controller.user_addToCart_get);
 
