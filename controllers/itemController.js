@@ -605,9 +605,15 @@ exports.removeOneItem = async (req, res, next) => {
                 err.status = 404;
                 return err;
             }
+            var prevQuantity = results.user.getQuantity(req.body.itemId);
+            if (prevQuantity === 0) {
+                console.log("Nonono, no negative items.");
+            }
+            
             results.item.upStock(req.body.size, 1);
             results.user.lowerQuantityItem(results.item, 1, req.body.size);
             console.log("removed one item instance");
+            
         }
     )
 };

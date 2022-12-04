@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\controllers",
+    "\\routes",
+    "\\views"
   ],
-  "SelectedNode": "\\C:\\Users\\kai\\Source\\Repos\\LocalLibrary",
+  "SelectedNode": "\\controllers\\userController.js",
   "PreviewInSolutionExplorer": false
 }
