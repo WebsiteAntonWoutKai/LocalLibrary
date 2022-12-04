@@ -2,16 +2,6 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-//mogelijkse verbetering voor drie aparte stock attributen -> array met daarin stock-schema's zoals dit
-const Stock = new Schema({
-    size: {
-      type: String,
-      required: true,
-      enum: ["Large", "Medium", "Small"],
-    },
-    amount: { type: Number, required: true },
-})
-
 const ItemSchema = new Schema({
   name: { type: String, required: true, maxLength: 100 },
   category: {type: Schema.Types.ObjectId, ref: "Category", required: true},
