@@ -22,7 +22,7 @@ const UserSchema = new Schema({
       {
         itemId: {
           type: Schema.Types.ObjectId,
-          ref: "item",
+          ref: "Item",
           //required: true
         },
         size: { type: String },

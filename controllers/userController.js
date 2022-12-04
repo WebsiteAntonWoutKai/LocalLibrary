@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Item = require("../models/item");
 const async = require("async");
 const { body, validationResult } = require("express-validator");
 
@@ -481,6 +482,50 @@ exports.user_update_post = [
         }
     },
 ];
+
+exports.user_cart= async function (req, res, next) {
+    User.findById(req.params.id, async (err, found_user) => {
+
+        if (err) {
+            return next(err);
+        }
+        if (found_user == null) {
+            // No results.
+            var err = new Error("User not found");
+            err.status = 404;
+            return next(err);
+        }
+        var itemsInCart = [];
+        var totalPriceItems = 0;
+        found_user.shoppingCart.items.forEach(async (element) => {
+            Item.findById(element.itemId, async (err, found_item) => {
+                var quantity = element.quantity;
+                var size = element.size;
+                var price = found_item.price;
+                var name = found_item.name;
+                var imgPath = found_item.imagePath;
+
+                totalPriceItems = totalPriceItems + (price * quantity);
+                itemsInCart.push({
+                    itemId: element.itemId,
+                    name: name,
+                    imgPath: imgPath,
+                    price: price,
+                    quantity: quantity,
+                    size: size,
+                });
+
+                // Success.
+                res.render("cart", {
+                    user: found_user,
+                    items: itemsInCart,
+                    totalPrice: totalPriceItems,
+                })
+            })
+        })
+    })
+};
+
 
 /*
 //misschien beter om dit in itemcontroller te zetten, dan is item al beschikbaar en kan user uit session gehaald worden

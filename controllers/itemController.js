@@ -509,3 +509,115 @@ exports.addToCart_post = [
     }
     
 ];
+exports.addOneItem = (req, res, next) => {
+    /*
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        // There are errors. Render form again with sanitized values/errors messages.
+        res.render("shoppingCart", {
+            item: req.body,
+            user: User.findById(req.session.userid),
+            errors: errors.array(),
+        });
+        return;
+    }*/
+    async.parallel(
+        {
+            user(callback) {
+                User.findById(req.session.userid).exec(callback);
+            },
+            item(callback) {
+                Item.findById(req.body.itemId).exec(callback);
+            },
+        },
+        (err, results) => {
+
+            if (err) {
+                return (err);
+            }
+            if (results.user == null) {
+                // No results.
+                console.log("No Session In Progress.");
+                const err = new Error("No session in progress.");
+                err.status = 404;
+                return err;
+            }
+            results.item.lowerStock(req.body.size, 1),
+                results.user.addToCart(results.item, 1, req.body.size),
+                next();
+        }
+    )
+};
+
+exports.removeOneItem = async (req, res) => {
+    async.parallel(
+        {
+            user(callback) {
+                User.findById(req.session.userid).exec(callback);
+            },
+            item(callback) {
+                Item.findById(req.params.id).exec(callback);
+            },
+        },
+        (err, results) => {
+            if (err) {
+                return next(err);
+            }
+            if (results.user == null) {
+                // No results.
+                const err = new Error("No session in progress.");
+                err.status = 404;
+                return next(err);
+            }
+            results.item.UpStock(req.body.size, 1),
+                results.user.lowerQuantityItem(results.item, 1, req.body.size),
+                next();
+
+        }
+    )
+
+};
+
+exports.removeItem = async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        // There are errors. Render form again with sanitized values/errors messages.
+        res.render("cart", {
+            item: req.body,
+            user: User.findById(req.session.userid),
+            errors: errors.array(),
+        });
+        return;
+    }
+    async.parallel(
+        {
+            user(callback) {
+                User.findById(req.session.userid).exec(callback);
+            },
+            item(callback) {
+                Item.findById(req.params.id).exec(callback);
+            },
+        },
+        (err, results) => {
+            console.log("test");
+            if (err) {
+                return next(err);
+            }
+            if (results.user == null) {
+                // No results.
+                const err = new Error("No session in progress.");
+                err.status = 404;
+                return next(err);
+            }
+            console.log(req.body.size + " test");
+
+            results.user.RemoveItem(results.item, req.body.size),
+                results.item.UpStock(req.body.size, req.body.amount),
+
+                next();
+
+        }
+    )
+
+};
