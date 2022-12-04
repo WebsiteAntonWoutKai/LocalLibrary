@@ -625,7 +625,61 @@ exports.removeOneItem = async (req, res, next) => {
             console.log("removed one item instance");
         }
     )
-    
+};
+
+exports.changeQuantity = async (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        // There are errors. Render form again with sanitized values/errors messages.
+        res.render("shoppingCart", {
+            item: req.body,
+            user: User.findById(req.session.userid),
+            errors: errors.array(),
+        });
+        return;
+    }
+    async.parallel(
+        {
+            user(callback) {
+                User.findById(req.session.userid).exec(callback);
+            },
+            item(callback) {
+                Item.findById(req.body.itemId).exec(callback);
+            },
+        },
+        (err, results) => {
+            console.log("test");
+            if (err) {
+                console.log("error");
+                return err;
+            }
+            if (results.user == null) {
+                // No results.
+                console.log("No Session In Progress.")
+                const err = new Error("No session in progress.");
+                err.status = 404;
+                return err;
+            }
+            const previousQuantity = results.user.getQuantity(req.body.itemId);
+            console.log(previousQuantity);
+            if (previousQuantity < req.body.newQuantity) {
+                var amount = req.body.newQuantity - previousQuantity;
+                results.item.lowerStock(req.body.size, amount);
+                results.user.addToCart(results.item, amount, req.body.size);
+            }
+            else if (previousQuantity > req.body.newQuantity){
+                var amount = previousQuantity - req.body.newQuantity ;
+                results.item.upStock(req.body.size, amount);
+                results.user.lowerQuantityItem(results.item, amount, req.body.size);
+            }
+            else {  //als ze gelijk zijn hele item verwijderen uit cart
+                results.item.upStock(req.body.size, previousQuantity)
+                results.user.removeItemFromCart();
+            }
+            console.log("set quantity");
+        }
+    )
 };
 
 exports.removeItem = async (req, res, next) => {

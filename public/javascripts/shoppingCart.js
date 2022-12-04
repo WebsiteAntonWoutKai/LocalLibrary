@@ -55,6 +55,8 @@ $(document).ready(function(itemId, size, quantity){
 //     }
 //     httpRequest.send('itemId='+itemId+'&size='+size);
 // };
+
+
 var outputQuantity = document.getElementById("quantity");
 //add one 
 document.getElementById("addOne").addEventListener("click", (event) => {
@@ -102,8 +104,28 @@ document.getElementById("removeOne").addEventListener("click", (event) => {
     outputQuantity = outputQuantity - 1;
 });
 
-
-
+/*
+document.getElementById("quantity").addEventListener("change",function(event) {
+        var itemId = event.target.getAttribute("itemId");
+        var size = event.target.getAttribute("size");
+        var value = event.target.getAttribute("value");
+        console.log(value);
+        console.log(itemId);
+        console.log(size);
+        
+        const httpRequest = new XMLHttpRequest();
+        httpRequest.open("POST", '/catalog/item/'+`itemId`+'/changeQuantity', true);
+        httpRequest.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
+        httpRequest.readyStateChange = function() {
+            if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
+                console.log(httpRequest.responseText);
+            } else {
+            console.log('There was a problem with the request.');
+            }
+    }
+        httpRequest.send('itemId='+itemId+'&size='+size+'&newQuantity'+value);
+    });
+*/
 
 
 

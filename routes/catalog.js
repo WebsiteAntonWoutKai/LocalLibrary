@@ -80,6 +80,8 @@ router.post("/item/:id/addOne", item_controller.addOneItem);
 
 router.post("/item/:id/removeOne", item_controller.removeOneItem);
 
+router.post("/item/:id/changeQuantity", item_controller.changeQuantity);
+
 router.post("/item/:id/remove", item_controller.removeItem);
 
 /// CONTACT ROUTES ///
