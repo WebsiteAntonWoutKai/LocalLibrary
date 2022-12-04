@@ -18,7 +18,7 @@ block content
                                     <img width = 30 height = 45 class="img-fluid rounded" src="#{item.imgPath}">
                                 .col-md-3.col-lg-3.col-xl-3
                                   h6.text-black.mb-0 #{item.name}
-                                  h6.text-muted #{(item.itemId)}
+                                  h6.text-muted #{(item.size)}
                                 .col-md-3.col-lg-3.col-xl-2.d-flex
                                   - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
                                   button.btn.btn-primary(type="button" id="removeOne" onclick="removeOne(#{item.itemId},#{item.size})") -1
@@ -31,6 +31,7 @@ block content
                                 .col-md-1.col-lg-1.col-xl-1.text-end
                                   a.text-muted(href='#!')
                                       i.fas.fa-times
+                                script(type="module" src='/javascripts/shoppingCart.js')
                         hr.my-4
                         .pt-5
                             h6.mb-0

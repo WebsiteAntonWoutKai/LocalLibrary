@@ -539,13 +539,13 @@ exports.user_cart= async function (req, res, next) {
 
         var itemsInCart = [];
         var totalPriceItems = 0;
-        var totalIncShipping = 0;
 
         return Promise.all(found_user.shoppingCart.items.map((element) => {
             return Item.findById(element.itemId).then((found_item) => {
                 var name = found_item.name;
                 var imgPath = found_item.imagePath;
                 itemsInCart.push({
+                    size: element.size,
                     itemId: element.itemId,
                     price: element.price,
                     name: name,
@@ -558,7 +558,7 @@ exports.user_cart= async function (req, res, next) {
             user: found_user,
             items: itemsInCart,
             totalPrice: totalPriceItems,
-            totalIncShipping: totalPriceItems + 5.7,
+            totalIncShipping: totalPriceItems + 5.70,
         }))
     })
 };
