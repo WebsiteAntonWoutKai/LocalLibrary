@@ -10,7 +10,7 @@ block content
             - var h1Classes = ['h3', 'mb-3', 'font-weight-normal']
             h1(class=h1Classes) #{title}
     
-        
+
             label(for='email') Email: 
             input#email.form-control(type='text', placeholder='Dwight.Schrute@DunderMifflin.com' name='email' required='true' autofocus value=(undefined===user ? '' : user.email))
         
@@ -20,7 +20,7 @@ block content
             input(type='hidden' name="_csrf" value=_csrf)
 
             - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
-            button.btn.btn-primary(type='submit') Submit
+            button.btn.btn-secondary(type='submit') Login
 
     div.text-center
             
