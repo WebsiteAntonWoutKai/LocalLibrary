@@ -510,20 +510,6 @@ exports.user_clear_cart = function (req, res, next) {
     })
 };
 
-const findImgPath = async function(itemId)  {
-    Item.findById(itemId).exec((err, found_item) => {
-        if (err) {
-            return err;
-        }
-        if (found_item == null) {
-            // No results.
-            var err = new Error("Item not found");
-            err.status = 404;
-            return err;
-        }
-        return found_item.imagePath;
-    })
-}
 
 exports.user_cart= async function (req, res, next) {
     User.findById(req.params.id, async (err, found_user) => {
@@ -562,53 +548,5 @@ exports.user_cart= async function (req, res, next) {
         }))
     })
 };
-/*
-//misschien beter om dit in itemcontroller te zetten, dan is item al beschikbaar en kan user uit session gehaald worden
-exports.user_addToCart_get = function (req, res, next) {
-    if (req.session.userid) {
-        res.render("item_detail_addToCart");
-    }
-    else{
-        res.render("login", { title: "Login" });
-    }
-};
 
-exports.user_addToCart_post = [
-    body("size")
-        .trim()
-        .isLength({ min: 1 })
-        .escape()
-        .withMessage("City name must be specified.")
-        .isAlphanumeric()
-        .withMessage("City name has non-alphanumeric characters."),
-    body("number")
-        .trim()
-        .isLength({ min: 1 })
-        .isNumeric()
-        .withMessage("Number must be numeric"),
 
-    (req, res, next) => {
-        async.parallel({
-            user(callback) {
-                User.findById(req.session.userid).exec(callback);
-            },
-            item(callback) {
-                Item.findById(req.body.item.id).exec(callback);
-            },
-        })
-        user.findById(req.session.userid).exec((err, found_user) => {
-            if(err) {
-                return next(err);
-            }
-            if (found_user == null) {
-                // No results.
-                const err = new Error("No session in progress.");
-                err.status = 404;
-                return next(err);
-            }
-            found_user.addToCart
-            
-        });
-    }
-];
-*/

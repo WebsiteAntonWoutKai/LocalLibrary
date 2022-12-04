@@ -542,19 +542,6 @@ exports.addToCart_post = [
 ];
 
 exports.addOneItem = (req, res, next) => {
-    /*
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        // There are errors. Render form again with sanitized values/errors messages.
-        res.render("shoppingCart", {
-            item: req.body,
-            user: User.findById(req.session.userid),
-            errors: errors.array(),
-        });
-        return;
-    }*/
-    console.log(req.body);
     async.parallel(
         {
             user(callback) {
@@ -608,7 +595,6 @@ exports.removeOneItem = async (req, res, next) => {
             },
         },
         (err, results) => {
-            console.log("test");
             if (err) {
                 console.log("error");
                 return err;

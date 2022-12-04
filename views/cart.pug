@@ -12,6 +12,7 @@ block content
                   .d-flex.justify-content-between.align-items-center.mb-5
                     h1.fw-bold.mb-0.text-black Shopping Cart
                         hr.my-4
+                        script(type="module" src='/javascripts/shoppingCart.js')
                         each item in items
                             .row.mb-4.d-flex.justify-content-between.align-items-center
                                 .col-md-2.col-lg-2.col-xl-2
@@ -21,7 +22,7 @@ block content
                                   h6.text-muted #{(item.size)}
                                 .col-md-3.col-lg-3.col-xl-2.d-flex
                                   - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
-                                  button.btn.btn-primary(type="button" id="removeOne" onclick="removeOne(#{item.itemId},#{item.size})") -1
+                                  button.btn.btn-primary(type="button" id="removeOne" itemId=item.itemId size=item.size ) -1
                                   h5.text-black.mb-0 #{item.quantity}
                                   <span id="quantity">#{quantity}</span>
                                   - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
@@ -30,8 +31,7 @@ block content
                                   h6.mb-0 &euro;  #{item.price} 
                                 .col-md-1.col-lg-1.col-xl-1.text-end
                                   a.text-muted(href='#!')
-                                      i.fas.fa-times
-                                script(type="module" src='/javascripts/shoppingCart.js')
+                                      i.fas.fa-times    
                         hr.my-4
                         .pt-5
                             h6.mb-0
