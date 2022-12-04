@@ -1,3 +1,4 @@
+//doel: via ajax een item toevoegen aan wishlist zonder te redirecten naar nieuwe page
 
 /*
 var output = document.getElementById("quantity")
@@ -54,86 +55,77 @@ $(document).ready(function(itemId, size, quantity){
 //     }
 //     httpRequest.send('itemId='+itemId+'&size='+size);
 // };
-// document.querySelector("quantity").forEach(item => {
-//     item.
-// });
 
-function upQuantity(itemId) {
-    document.getElementById("quantity").value = parseInt(document.getElementById("quantity").value) + 1;
-};
-function downQuantity(itemId) {
-    document.getElementById("quantity").value = parseInt(document.getElementById("quantity").value) - 1;
-    if (document.getElementById("quantity").value <= 1) {
-        document.getElementById("quantity").value = 1;
-    }       
-};
 
-// document.querySelectorAll("quantity").forEach(item => {
-//     item.addEventListener("upQuantity", (event) => {
-//         document.getElementsByName("name").value = parseInt(document.getElementById("quantity").value) + 1;
-//     });
-//     item.addEventListener("downQuantity", (event) => {
-//         document.getElementById("quantity").value = parseInt(document.getElementById("quantity").value) - 1;
-//         if (document.getElementById("quantity").value <= 1) {
-//             document.getElementById("quantity").value = 1;
-//         }  
-//     });
-// });
-
+var outputQuantity = document.getElementById("quantity");
 //add one 
-document.querySelectorAll("#addOne").forEach(item => {
-    item.addEventListener("click", (event) => {
-        var itemId = event.target.getAttribute("itemId");
-        var size = event.target.getAttribute("size");
-        upQuantity(itemId);
-        const httpRequest = new XMLHttpRequest();
-        httpRequest.open("POST", '/catalog/item/' + `itemId` + '/addOne', true);
-        httpRequest.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
-        httpRequest.onreadystatechange = function () {
-            if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
-                console.log(httpRequest.responseText);
-                //reload quantity and totalPrice
-                //outputQuantity.innerHtml = httpRequest.responseText
-                
-            } else {
-                console.log('There was a problem with the request.');
-            }
+document.getElementById("addOne").addEventListener("click", (event) => {
+    var itemId = event.target.getAttribute("itemId");
+    var size = event.target.getAttribute("size");
+    console.log(itemId);
+    console.log(size);
+    //console.log(event.target.value);
+    const httpRequest = new XMLHttpRequest();
+    httpRequest.open("POST", '/catalog/item/'+`itemId`+'/addOne', true);
+    httpRequest.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
+    httpRequest.onreadystatechange = function() {
+        if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
+            console.log(httpRequest.responseText);
+            //reload quantity and totalPrice
+            //outputQuantity.innerHtml = httpRequest.responseText
+            outputQuantity = outputQuantity + 1;
+        } else {
+            console.log('There was a problem with the request.');
         }
-        httpRequest.send('itemId=' + itemId + '&size=' + size);
-    });
+    }
+    httpRequest.send('itemId='+itemId+'&size='+size);
+    outputQuantity = outputQuantity + 1;
 });
-
 
 //remove one
-document.querySelectorAll("#removeOne").forEach(item => {
-    item.addEventListener("click", (event) => {
-        
-        var itemId = event.target.getAttribute("itemId");
-        var size = event.target.getAttribute("size");
-        //const downEvent = new Event("downQuantity");
-        downQuantity(itemId);
-        //console.log(event.target.value);
-        document.getElementById("quantity").value = parseInt(document.getElementById("quantity").value) - 1;
-        if (document.getElementById("quantity").value <= 1) {
-            document.getElementById("quantity").value = 1;
-        };
-        const httpRequest = new XMLHttpRequest();
-        httpRequest.open("POST", '/catalog/item/' + `itemId` + '/removeOne', true);
-        httpRequest.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
-        httpRequest.readyStateChange = function () {
-            if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
-                console.log(httpRequest.responseText);
-                
-            } else {
-                console.log('There was a problem with the request.');
-            }
+document.getElementById("removeOne").addEventListener("click", (event) => {
+    var itemId = event.target.getAttribute("itemId");
+    var size = event.target.getAttribute("size");
+    console.log(itemId);
+    console.log(size);
+    //console.log(event.target.value);
+    const httpRequest = new XMLHttpRequest();
+    httpRequest.open("POST", '/catalog/item/'+`itemId`+'/removeOne', true);
+    httpRequest.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
+    httpRequest.readyStateChange = function() {
+        if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
+            console.log(httpRequest.responseText);
+            //outputQuantity.innerHtml = httpRequest.responseText
+        } else {
+        console.log('There was a problem with the request.');
         }
-        httpRequest.send('itemId=' + itemId + '&size=' + size);
-    });
+}
+    httpRequest.send('itemId='+itemId+'&size='+size);
+    outputQuantity = outputQuantity - 1;
 });
 
+/*
+document.getElementById("quantity").addEventListener("change",function(event) {
+        var itemId = event.target.getAttribute("itemId");
+        var size = event.target.getAttribute("size");
+        var value = event.target.getAttribute("value");
+        console.log(value);
+        console.log(itemId);
+        console.log(size);
 
-
+        const httpRequest = new XMLHttpRequest();
+        httpRequest.open("POST", '/catalog/item/'+`itemId`+'/changeQuantity', true);
+        httpRequest.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
+        httpRequest.readyStateChange = function() {
+            if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
+                console.log(httpRequest.responseText);
+            } else {
+            console.log('There was a problem with the request.');
+            }
+    }
+        httpRequest.send('itemId='+itemId+'&size='+size+'&newQuantity'+value);
+    });
+*/
 
 
 
