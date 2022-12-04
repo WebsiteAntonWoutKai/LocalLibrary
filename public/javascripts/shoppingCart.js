@@ -57,7 +57,7 @@ $(document).ready(function(itemId, size, quantity){
 // };
 
 
-var outputQuantity = document.getElementById("quantity");
+var outputQuantity = parseFloat(document.getElementById("quantity").value);
 //add one 
 document.getElementById("addOne").addEventListener("click", (event) => {
     var itemId = event.target.getAttribute("itemId");
@@ -73,13 +73,13 @@ document.getElementById("addOne").addEventListener("click", (event) => {
             console.log(httpRequest.responseText);
             //reload quantity and totalPrice
             //outputQuantity.innerHtml = httpRequest.responseText
-            outputQuantity = outputQuantity + 1;
         } else {
             console.log('There was a problem with the request.');
         }
     }
     httpRequest.send('itemId='+itemId+'&size='+size);
     outputQuantity = outputQuantity + 1;
+    document.getElementById("quantity").setAttribute("value", outputQuantity);
 });
 
 //remove one
@@ -102,6 +102,7 @@ document.getElementById("removeOne").addEventListener("click", (event) => {
 }
     httpRequest.send('itemId='+itemId+'&size='+size);
     outputQuantity = outputQuantity - 1;
+    document.getElementById("quantity").setAttribute("value", outputQuantity);
 });
 
 /*
