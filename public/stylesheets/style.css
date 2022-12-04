@@ -136,16 +136,6 @@
     display: flex;
 }
 
-.card {
-    margin-bottom: 20px;
-}
-
-.card-img-top {
-    width: 200px;
-    height: 200px;
-    align-self: center;
-}
-
 @media (min-width: 1025px) {
     .h-custom {
         height: 100vh !important;
