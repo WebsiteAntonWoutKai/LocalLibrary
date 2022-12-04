@@ -21,21 +21,20 @@ block content
                                   h6.text-black.mb-0 #{item.name}
                                   h6.text-muted #{(item.size)}
                                 .col-md-3.col-lg-3.col-xl-2.d-flex
-                                  - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
-                                  button.btn.btn-primary(type="button" id="removeOne" itemId=item.itemId size=item.size ) -1
-                                  h5.text-black.mb-0 #{item.quantity}
-                                  <span id="quantity">#{quantity}</span>
-                                  - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
-                                  button.btn.btn-primary(type="button" id="addOne" itemId=item.itemId size=item.size ) +1 
+                                    - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
+                                    button.btn.btn-primary(type="button" id="removeOne" itemId=item.itemId size=item.size ) -1
+                                    input#quantity.form-control.input-number(type='Button' name=item.itemId min=1 value=item.quantity itemId=item.itemId)
+                                    - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
+                                    button.btn.btn-primary(type="button" id="addOne" itemId=item.itemId size=item.size ) +1 
                                 .col-md-3.col-lg-2.col-xl-2.offset-lg-1
                                   h6.mb-0 &euro;  #{item.price} 
                                 .col-md-1.col-lg-1.col-xl-1.text-end
                                   a.text-muted(href='#!')
-                                      i.fas.fa-times    
+                                      i.fas.fa-times   
                         hr.my-4
                         .pt-5
                             h6.mb-0
-                            a.text-body(href='/catalog')
+                            a.text-body(href='/catalog/items')
                                 i.fas.fa-long-arrow-alt-left.me-2
                                 | Back to shop
               .col-lg-4.bg-grey
@@ -49,5 +48,5 @@ block content
                   hr.my-4
                   .d-flex.justify-content-between.mb-5
                     h5.text-uppercase Total price
-                    h5 &euro; #{totalIncShipping}
+                    h5 &euro; #{totalPrice + 5.7}
                     

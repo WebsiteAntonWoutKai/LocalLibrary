@@ -1,4 +1,3 @@
-//doel: via ajax een item toevoegen aan wishlist zonder te redirecten naar nieuwe page
 
 /*
 var output = document.getElementById("quantity")
@@ -55,13 +54,42 @@ $(document).ready(function(itemId, size, quantity){
 //     }
 //     httpRequest.send('itemId='+itemId+'&size='+size);
 // };
-var outputQuantity = document.getElementById("quantity");
+// document.querySelector("quantity").forEach(item => {
+//     item.
+// });
+
+// function upQuantity(itemId) {
+//     document.querySelectorAll("quantity").forEach(item => {
+//         if(item.getAttribute("itemId") === itemId) {
+//             document.getElementsByName(itemId).value = parseInt(document.getElementsByName(itemId).value) + 1;
+//         }
+//     })
+// };
+// function downQuantity(itemId) {
+//     document.getElementsByName(itemId).value = parseInt(document.getElementsByName(itemId).value) - 1;
+//     if (document.getElementsByName(itemId).value <= 1) {
+//         document.getElementsByName(itemId).value = 1;
+//     }       
+// };
+
+// document.querySelectorAll("quantity").forEach(item => {
+//     item.addEventListener("upQuantity", (event) => {
+//         document.getElementsByName("name").value = parseInt(document.getElementById("quantity").value) + 1;
+//     });
+//     item.addEventListener("downQuantity", (event) => {
+//         document.getElementById("quantity").value = parseInt(document.getElementById("quantity").value) - 1;
+//         if (document.getElementById("quantity").value <= 1) {
+//             document.getElementById("quantity").value = 1;
+//         }  
+//     });
+// });
+
 //add one 
 document.querySelectorAll("#addOne").forEach(item => {
     item.addEventListener("click", (event) => {
-        console.log("test")
         var itemId = event.target.getAttribute("itemId");
         var size = event.target.getAttribute("size");
+        document.getElementsByName("name").value = parseInt(document.getElementById("quantity").value) + 1;
         const httpRequest = new XMLHttpRequest();
         httpRequest.open("POST", '/catalog/item/' + `itemId` + '/addOne', true);
         httpRequest.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
@@ -70,38 +98,43 @@ document.querySelectorAll("#addOne").forEach(item => {
                 console.log(httpRequest.responseText);
                 //reload quantity and totalPrice
                 //outputQuantity.innerHtml = httpRequest.responseText
-                outputQuantity = outputQuantity + 1;
+                
             } else {
                 console.log('There was a problem with the request.');
             }
         }
         httpRequest.send('itemId=' + itemId + '&size=' + size);
-        outputQuantity = outputQuantity + 1;
     });
-})
+});
 
 
 //remove one
 document.querySelectorAll("#removeOne").forEach(item => {
     item.addEventListener("click", (event) => {
+        
         var itemId = event.target.getAttribute("itemId");
         var size = event.target.getAttribute("size");
+        const downEvent = new Event("downQuantity");
+        //downQuantity(itemId);
         //console.log(event.target.value);
+        document.getElementById("quantity").value = parseInt(document.getElementById("quantity").value) - 1;
+        if (document.getElementById("quantity").value <= 1) {
+            document.getElementById("quantity").value = 1;
+        };
         const httpRequest = new XMLHttpRequest();
         httpRequest.open("POST", '/catalog/item/' + `itemId` + '/removeOne', true);
         httpRequest.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
         httpRequest.readyStateChange = function () {
             if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
                 console.log(httpRequest.responseText);
-                //outputQuantity.innerHtml = httpRequest.responseText
+                
             } else {
                 console.log('There was a problem with the request.');
             }
         }
         httpRequest.send('itemId=' + itemId + '&size=' + size);
-        outputQuantity = outputQuantity - 1;
     });
-})
+});
 
 
 
