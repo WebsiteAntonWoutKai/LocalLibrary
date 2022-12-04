@@ -185,4 +185,25 @@ UserSchema.methods.getTotalPriceItems = async function() {
   return total;
 };
 
+UserSchema.methods.getQuantity = async function(item, size) {
+  const findIndexOfItem = (element) => {
+    var sizeString = "" + size;     //omdat toString niet werkt
+    var elementIdString = "" + element.itemId;
+    var itemIdSize = "" + element.size; 
+    var itemIdString = "" + item._id;
+    return (itemIdString === elementIdString) && (sizeString === itemIdSize);
+  }
+  //kijken als item al in cart zit, zo ja haal op waar
+  const cartItemIndex = this.shoppingCart.items.findIndex(findIndexOfItem);
+
+  if (cartItemIndex >= 0) {
+    return this.shoppingCart.items[cartItemIndex].quantity;
+  }
+  else {
+    console.log("Item Not Found In Shopping Cart");
+    return;
+  }
+
+};
+
 module.exports = mongoose.model("User", UserSchema);

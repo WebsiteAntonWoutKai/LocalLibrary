@@ -510,17 +510,33 @@ exports.user_clear_cart = function (req, res, next) {
     })
 };
 
+const findImgPath = async function(itemId)  {
+    Item.findById(itemId).exec((err, found_item) => {
+        if (err) {
+            return err;
+        }
+        if (found_item == null) {
+            // No results.
+            var err = new Error("Item not found");
+            err.status = 404;
+            return err;
+        }
+        return found_item.imagePath;
+    })
+}
+
 exports.user_cart= async function (req, res, next) {
     User.findById(req.params.id, async (err, found_user) => {
         if (err) {
-            return next(err);
+            return err;
         }
         if (found_user == null) {
             // No results.
             var err = new Error("User not found");
             err.status = 404;
-            return next(err);
+            return err;
         }
+
         var itemsInCart = [];
         var totalPriceItems = 0;
         var totalIncShipping = 0;
