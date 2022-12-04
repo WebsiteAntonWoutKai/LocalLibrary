@@ -18,13 +18,16 @@ router.get("/", home_controller.index);
 
 /// CATEGORY ROUTES ///
 
-// GET request for creating Category. 
+// GET request for creating Category.
 //router.get("/category/create", category_controller.category_create_get);
 
 // POST request for creating Category.
 //router.post("/category/create", category_controller.category_create_post);
 
 // GET request to delete Category.
+
+router.get("/cookies", home_controller.cookies);
+
 router.get("/category/:id/delete", category_controller.category_delete_get);
 
 // POST request to delete Category.

@@ -24,3 +24,7 @@ exports.index = (req, res) => {
             });
     }
 };
+
+exports.cookies = (req, res) => {
+    res.render("cookies");
+}
