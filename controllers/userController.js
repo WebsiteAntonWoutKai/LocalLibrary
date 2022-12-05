@@ -3,8 +3,6 @@ const Item = require("../models/item");
 const async = require("async");
 const { body, validationResult } = require("express-validator");
 
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
 const csrf = require('csurf');
 var csrfProtection = csrf();
 
@@ -13,8 +11,6 @@ const crypto = require('crypto');
 const { Console } = require("console");
 const user = require("../models/user");
 const router = require("../routes/users");
-const { validateHeaderValue } = require("http");
-const authTokens = {};
 
 const getHashedPassword = (password) => {
     const sha256 = crypto.createHash('sha256');
@@ -22,24 +18,6 @@ const getHashedPassword = (password) => {
     return hash;
 }
   
-const generateAuthToken = () => {
-    return crypto.randomBytes(30).toString('hex');
-}
-
-
-/*
-// to support URL-encoded bodies
-router.use(bodyParser.urlencoded({ extended: true }));
-
-router.use(cookieParser());
-
-router.use((req, res, next) => {
-  const authToken = req.cookies['AuthToken'];
-  req.user = authTokens[authToken];
-  next();
-});
- */
-
 exports.user_login_get = function (req, res, next) {
     //nagaan als er al een session bezig is, indien ja redirect meteen naar user
     if (req.session.userid) {
@@ -418,31 +396,16 @@ exports.user_update_post = [
         .withMessage("Family name must be specified.")
         .isAlphanumeric()
         .withMessage("Family name has non-alphanumeric characters."),
-    body("date_of_birth", "Invalid date of birth")
-        .optional({ checkFalsy: true })
-        .isISO8601()
-        .toDate(),
-    body("email")
-        .trim()
-        .isLength({ min: 1 })
-        .escape()
-        .withMessage("Email must be specified.")
-        .isEmail()
-        .withMessage("Must be a valid email address."),
     body("street")
         .trim()
         .isLength({ min: 1 })
         .escape()
-        .withMessage("Address name must be specified.")
-        .isAlphanumeric()
-        .withMessage("Street name has non-alphanumeric characters."),
+        .withMessage("Address name must be specified."),
     body("city")
         .trim()
         .isLength({ min: 1 })
         .escape()
-        .withMessage("City name must be specified.")
-        .isAlphanumeric()
-        .withMessage("City name has non-alphanumeric characters."),
+        .withMessage("City name must be specified."),
     body("number")
         .trim()
         .isLength({ min: 1 })
@@ -464,7 +427,7 @@ exports.user_update_post = [
             city: req.body.city,
             number: req.body.number,
             country: req.body.country,
-            shoppingCart: req.body.shoppingCart,
+            shoppingCart: { items: [] },
             _id: req.params.id,
         });
 
@@ -484,9 +447,11 @@ exports.user_update_post = [
                 {},
                 function (err, theuser) {
                     if (err) {
+                        console.log("er is een error bij findByIdAndUpdate.")
                         return next(err);
                     }
                     // Successful - redirect to genre detail page.
+                    console.log("rendering to updated user.");
                     res.redirect(theuser.url);
                 }
             );

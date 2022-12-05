@@ -197,24 +197,4 @@ exports.addCategory_post = [
         });
     },
 ];
-/*
-//verwijderen van product uit webshop
-exports.removeProduct_get = (req, res, next) => {
-    
-};
-
-
-exports.removeProduct_post = (req, res, next) => {
-    //doel: adhv het form het gewenste product opzoeken en functie die ze verwijdert oproepen
-};
-
-//updaten van product (vb stock, prijs, image, ...)
-exports.updateProduct_get = (req, res, next) => {
-   
-};
-
-exports.updateProduct_post = [
-    //doel: adhv het form de gewenste products opzoeken en functie die ze zal updaten oproepen
-];
-*/
 

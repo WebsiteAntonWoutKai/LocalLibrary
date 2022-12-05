@@ -8,7 +8,5 @@ block content
     form(method='POST' action='')
         div.form-group
             input#userid.form-control(type='hidden',name='userid', required='true', value=user._id )
-        //div.form-group
-            input#password.form-control(type='password' name='password' required='true' value=(undefined===user ? '' : user.password))
 
         button.btn.btn-primary(type='submit') Delete
