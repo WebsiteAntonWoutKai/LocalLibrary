@@ -141,7 +141,7 @@ router.get("/user/:id/update", authUser, user_controller.user_update_get);
 router.post("/user/:id/update", authUser, user_controller.user_update_post);
 
 // GET request for one User.
-router.get("/user/:id", user_controller.user_detail);
+router.get("/user/:id", authUser, user_controller.user_detail);
 
 // GET request for list of all User.
 router.get("/users", user_controller.user_list);
