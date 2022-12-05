@@ -82,7 +82,6 @@ exports.contact_create_post = [
             res.render("contact_form", {
                 title: "Contact",
                 contact: req.body,
-                user: User.findById(req.session.userid),
                 errors: errors.array(),
             });
             return;
