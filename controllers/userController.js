@@ -264,6 +264,7 @@ exports.user_protected_get = function (req, res, next) {
 };
 
 exports.user_logout_get = function(req, res, next) {
+    //eerst nog kijken als user ingelogd is
     //destroy de session als de user uitlogt + verwijder winkelmand
     User.findById(req.session.userid).exec((err, found_user) => {
         if (err) {

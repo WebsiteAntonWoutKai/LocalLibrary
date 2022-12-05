@@ -11,6 +11,7 @@ const category_controller = require("../controllers/categoryController");
 const user_controller = require("../controllers/userController");
 const admin_controller = require("../controllers/adminController");
 const home_controller = require("../controllers/homeController");
+const authUser = require("../middleware/authUser");
 
 
 router.get("/", home_controller.index);
@@ -128,16 +129,16 @@ router.get("/contacts", contact_controller.contact_list);
 router.get('/user/protected', user_controller.user_protected_get);
 
 // GET request to delete User.
-router.get("/user/:id/delete", user_controller.user_delete_get);
+router.get("/user/:id/delete", authUser, user_controller.user_delete_get);
 
 // POST request to delete User.
-router.post("/user/:id/delete", user_controller.user_delete_post);
+router.post("/user/:id/delete", authUser, user_controller.user_delete_post);
 
 // GET request to update User.
-router.get("/user/:id/update", user_controller.user_update_get);
+router.get("/user/:id/update", authUser, user_controller.user_update_get);
 
 // POST request to update User.
-router.post("/user/:id/update", user_controller.user_update_post);
+router.post("/user/:id/update", authUser, user_controller.user_update_post);
 
 // GET request for one User.
 router.get("/user/:id", user_controller.user_detail);
