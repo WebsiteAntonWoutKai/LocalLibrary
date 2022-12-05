@@ -1,59 +1,63 @@
 extends layout
 
 block content
-  .container.py-5.h-100
-    .row.d-flex.justify-content-center.align-items-center.h-100
-      .col-12
-        .card.card-registration.card-registration-2(style='border-radius: 15px;')
-          .card-body.p-0
-            .row.g-0
-              .col-lg-8
-                .p-5
-                  .d-flex.justify-content-between.align-items-center.mb-5
-                    h1.fw-bold.mb-0.text-black Shopping Cart
-                        hr.my-4
-                        script(type="module" src='/javascripts/shoppingCart.js')
-                        each item in items
-                            .row.mb-4.d-flex.justify-content-between.align-items-center
-                                .col-md-2.col-lg-2.col-xl-2
-                                    <img width = 30 height = 45 class="img-fluid rounded" src="#{item.imgPath}">
-                                .col-md-3.col-lg-3.col-xl-3
-                                  h6.text-black.mb-0 #{item.name}
-                                  h6.text-muted #{(item.size)}
-                                .col-md-3.col-lg-3.col-xl-2.d-flex
-                                    - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
-                                    button.btn.btn-primary(type="button" id="removeOne" itemId=item.itemId size=item.size ) -1
-                                    input#quantity.form-control.input-number(type='Button' min=1 value=item.quantity itemId=item.itemId)
-                                    - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
-                                    button.btn.btn-primary(type="button" id="addOne" itemId=item.itemId size=item.size ) +1 
-                                .col-md-3.col-lg-2.col-xl-2.offset-lg-1
-                                  h6.mb-0 &euro;  #{item.price} 
-                                .col-md-1.col-lg-1.col-xl-1.text-end
-                                  a.text-muted(href='#!')
-                                      i.fas.fa-times   
-                        hr.my-4
-                        .pt-5
-                            h6.mb-0
-                            a.text-body(href='/catalog/items')
-                                i.fas.fa-long-arrow-alt-left.me-2
-                                | Back to shop
-              .col-lg-4.bg-grey
-                .p-5
-                  h3.fw-bold.mb-5.mt-2.pt-1 Summary
-                  hr.my-4
-                  .d-flex.justify-content-between.mb-4
-                    h5 Item subtotal: 
-                    h5 &euro; #{totalPrice}
-                  .d-flex.justify-content-between.mb-4
-                    h5.text.mb-3 Shipping: 
-                    h5 &euro; 5,70
+  script(type="module" src='/javascripts/shoppingCart.js')  
+  if(totalPrice > 0)
+      .container.py-5.h-100
+        .row.d-flex.justify-content-center.align-items-center.h-100
+          .col-12
+            .card.card-registration.card-registration-2(style='border-radius: 15px;')
+              .card-body.p-0
+                .row.g-0
+                  .col-lg-8
+                    .p-5
+                      .d-flex.justify-content-between.align-items-center.mb-5
+                        h1.fw-bold.mb-0.text-black Shopping Cart
+                            hr.my-4
+                       
+                            each item in items
+                                .row.mb-4.d-flex.justify-content-between.align-items-center(class = "cart-item")
+                                    .col-md-2.col-lg-2.col-xl-2
+                                        <img width = 30 height = 45 class="img-fluid rounded" src="#{item.imgPath}">
+                                    .col-md-3.col-lg-3.col-xl-3
+                                      h6.text-black.mb-0 #{item.name}
+                                      h6.text-muted #{(item.size)}
+                                    .col-md-3.col-lg-3.col-xl-2.d-flex
+                                        - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
+                                        button.btn.btn-primary(type="button" id="removeOne" itemId=item.itemId size=item.size ) -
+                                        input#quantity.form-control.input-number(type='Button' min=1 value=item.quantity itemId=item.itemId)
+                                        - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
+                                        button.btn.btn-primary(type="button" id="addOne" itemId=item.itemId size=item.size ) +
+                                    .col-md-3.col-lg-2.col-xl-2.offset-lg-1
+                                      h6.mb-0 &euro;  #{item.price} 
+                                    .col-md-1.col-lg-1.col-xl-1.text-end
+                                      a.text-muted(href='#!')
+                                          i.fas.fa-times   
+                            hr.my-4           
+                            .pt-5
+                                <form action= '#{user.url}/clearcart'>
+                                    button.btn.btn-primary(type="submit" id="clearCart") Clear cart
+                                <form>
+
+                  .col-lg-4.bg-grey
+                    .p-5
+                      h3.fw-bold.mb-5.mt-2.pt-1 Summary
+                      hr.my-4
+                      .d-flex.justify-content-between.mb-4
+                        h5 Item subtotal: 
+                        h5 &euro; #{totalPrice}
+                      .d-flex.justify-content-between.mb-4
+                        h5.text.mb-3 Shipping: 
+                        h5 &euro; 5,70
 
 
-                  hr.my-4
-                  .d-flex.justify-content-between.mb-5
-                    h5.text-uppercase Total price:
-                    h5 &euro; #{totalIncShipping}
-                  <a href= "checkout">
-                    button.btn.btn-primary(type="button" id="checkout" ) Checkout
-                  </a>
+                      hr.my-4
+                      .d-flex.justify-content-between.mb-5
+                        h5.text-uppercase Total price:
+                        h5 &euro; #{totalIncShipping}
+                      <a href= "checkout">
+                        button.btn.btn-primary(type="button" id="checkout" ) Checkout
+                      </a>
+  else
+    h1 Your shopping cart is empty, click <a href = '/catalog/items'>here</a> to add items
                     

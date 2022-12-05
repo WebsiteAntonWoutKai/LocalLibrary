@@ -28,6 +28,8 @@ router.get("/", home_controller.index);
 
 router.get("/cookies", home_controller.cookies);
 
+router.get("/success", home_controller.success);
+
 router.get("/category/:id/delete", category_controller.category_delete_get);
 
 // POST request to delete Category.

@@ -17,6 +17,7 @@ const UserSchema = new Schema({
   city: { type: String, maxLength: 100 },
   country: { type: String, maxLength: 100 },
   date_of_birth: { type: Date },
+  cookies: {type: Boolean, default: false},
   shoppingCart: {
     items: [
       {

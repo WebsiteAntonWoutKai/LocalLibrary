@@ -1,0 +1,9 @@
+extends layout
+
+block content
+    h1 Transaction succeeded
+    p You will be redirected to the home page in 5 seconds.
+    script.
+        window.setTimeout(function(){
+            window.location.href = "/"
+        }, 5000);

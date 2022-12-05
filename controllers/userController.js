@@ -505,7 +505,7 @@ exports.user_clear_cart = function (req, res, next) {
         }
         // Success.
         found_user.clearCart();
-        res.redirect(found_user.url);
+        res.redirect(found_user.url + '/cart');
     })
 };
 
@@ -615,7 +615,7 @@ exports.user_checkout_post = function (req, res, next) {
                     })
                 }
                 found_user.clearCart_checkout();
-                res.redirect("/catalog");
+                res.redirect("/catalog/success");
             });
         });
     }
