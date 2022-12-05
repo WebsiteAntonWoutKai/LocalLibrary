@@ -165,16 +165,12 @@ exports.user_register_post = [
         .trim()
         .isLength({ min: 1 })
         .escape()
-        .withMessage("Address name must be specified.")
-        .isAlphanumeric()
-        .withMessage("Street name has non-alphanumeric characters."),
+        .withMessage("Address name must be specified."),
     body("city")
         .trim()
         .isLength({ min: 1 })
         .escape()
-        .withMessage("City name must be specified.")
-        .isAlphanumeric()
-        .withMessage("City name has non-alphanumeric characters."),
+        .withMessage("City name must be specified."),
     body("country")
         .trim()
         .isLength({ min: 1 })
@@ -264,7 +260,6 @@ exports.user_protected_get = function (req, res, next) {
 };
 
 exports.user_logout_get = function(req, res, next) {
-    //eerst nog kijken als user ingelogd is
     //destroy de session als de user uitlogt + verwijder winkelmand
     User.findById(req.session.userid).exec((err, found_user) => {
         if (err) {
@@ -336,7 +331,9 @@ exports.user_detail = (req, res, next) => {
 
 // Display User delete form on GET.
 exports.user_delete_get = (req, res, next) => {
-    async.parallel(
+    //checken als de juiste user ingelogd is
+    if(req.session.userid === req.params._id) {
+        async.parallel(
         {
             user(callback) {
                 User.findById(req.params.id).exec(callback);
@@ -355,8 +352,11 @@ exports.user_delete_get = (req, res, next) => {
                 title: "Delete User",
                 user: results.user,
             });
-        }
-    );
+        });
+    }
+    else {
+        res.redirect("/users/login");
+    }
 };
 
 // Handle User delete on POST.
