@@ -9,30 +9,31 @@ block content
             h1 #{item.name}
 
             p(style="font-size:1.5rem") € #{item.price}
+            if(user)
+                if(!user.isAdmin)
+                    form(action=item.url + '/addToCart', method='POST' class="my-5" onsubmit="return validateForm()")
+                        div(class="form-group")
+                            select(class="form-select border-dark rounded-0" type='select' name="size" id="size_selection")
+                                option(disabled selected hiddin) Select a size
+                                if item.stockSmall > 0
+                                    option(value="Small" selected=(undefined===size || size!='Small' ? false:'selected')) Small
+                                else
+                                    option(disabled value="Small") Small
 
-            form(action=item.url + '/addToCart', method='POST' class="my-5" onsubmit="return validateForm()")
-                div(class="form-group")
-                    select(class="form-select border-dark rounded-0" type='select' name="size" id="size_selection")
-                        option(disabled selected hiddin) Select a size
-                        if item.stockSmall > 0
-                            option(value="Small" selected=(undefined===size || size!='Small' ? false:'selected')) Small
-                        else
-                            option(disabled value="Small") Small
+                                if item.stockMedium > 0
+                                    option(value="Medium" selected=(undefined===size || size!='Medium' ? false:'selected')) Medium
+                                else
+                                    option(disabled value="Medium") Medium
 
-                        if item.stockMedium > 0
-                            option(value="Medium" selected=(undefined===size || size!='Medium' ? false:'selected')) Medium
-                        else
-                            option(disabled value="Medium") Medium
+                                if item.stockLarge > 0
+                                    option(value="Large" selected=(undefined===size || size!='Large' ? false:'selected')) Large
+                                else
+                                    option(disabled value="Large") Large
+                            input(type='hidden' name="itemId" value=item._id)
 
-                        if item.stockLarge > 0
-                            option(value="Large" selected=(undefined===size || size!='Large' ? false:'selected')) Large
-                        else
-                            option(disabled value="Large") Large
-                    input(type='hidden' name="itemId" value=item._id)
-
-                div(class="form-group my-2" )
-                    button(class="btn btn-dark rounded-0" style="width:100%" type="submit") ADD TO CART
-                script(src='/javascripts/sizeSelectorCheck.js')
+                        div(class="form-group my-2" )
+                            button(class="btn btn-dark rounded-0" style="width:100%" type="submit") ADD TO CART
+                        script(src='/javascripts/sizeSelectorCheck.js')
 
             div(class="accordion text-start" id="accordionExample")
                 div( class="accordion-item border-end-0 border-start-0")
