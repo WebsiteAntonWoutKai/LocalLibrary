@@ -1,6 +1,3 @@
-# LocalLibrary
+#Elloluv webshop
 
-token insta api: IGQVJXSklOLWNnZAE9xUkxhT2p5WkFwSks0b0p3bXI2ek9WdWhuYThUT1FYLW5WMGp5RkxxNDBtWmZAnSW03R3RzaVJRY2FlbWt5RFJHZAUZAlS1A4Uy0zeGJCaDB5WEMtdFlKeFR4dnp5aEYycnRVcmdzTQZDZD
-
-run op localhost:3000
-  in cmd: npm run serverstart
+This is the source code for our webshop Elloluv
