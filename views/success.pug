@@ -2,8 +2,5 @@ extends layout
 
 block content
     h1 Transaction succeeded
-    p You will be redirected to the home page in 5 seconds.
-    script.
-        window.setTimeout(function(){
-            window.location.href = "/"
-        }, 5000);
+    p(id="countDown") You will be redirected to the home page in <span id = "clock">5<span>
+    script(src='/javascripts/counterRedirect.js')
