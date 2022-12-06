@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\public",
+    "\\public\\javascripts",
+    "\\public\\stylesheets",
+    "\\views"
   ],
-  "SelectedNode": "\\C:\\Users\\deneu\\Source\\Repos\\LocalLibrary",
   "PreviewInSolutionExplorer": false
 }

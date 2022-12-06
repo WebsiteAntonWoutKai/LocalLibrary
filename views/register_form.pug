@@ -6,9 +6,9 @@ block content
     form(method='POST' action='/users/register')
         div.form-group
             label(for='first_name') First Name:
-            input#first_name.form-control(type='text', placeholder='First name (Christian)' name='first_name' autofocus required='true' value=(undefined===user ? '' : user.first_name) )
+            input#first_name.form-control(type='text', placeholder='First name (Dwight)' name='first_name' autofocus required='true' value=(undefined===user ? '' : user.first_name) )
             label(for='family_name') Family Name:
-            input#family_name.form-control(type='text', placeholder='Family name (Surname)' name='family_name' required='true' value=(undefined===user ? '' : user.family_name))
+            input#family_name.form-control(type='text', placeholder='Family name (Schrute)' name='family_name' required='true' value=(undefined===user ? '' : user.family_name))
         div.form-group
             label(for='date_of_birth') Date of birth:
             input#date_of_birth.form-control(type='date', name='date_of_birth' value=(undefined===user ? '' : user.date_of_birth_yyyy_mm_dd))
@@ -26,10 +26,10 @@ block content
             input#address.form-control(type='text', placeholder="Address" name='address')
         div.form-group 
             label(for='country') Country:
-            input#country.form-control(type='text', placeholder="Norway" name='country' required='true', value=(undefined===user ? '' : user.country))
+            input#country.form-control(type='text', placeholder="Country" name='country' required='true', value=(undefined===user ? '' : user.country))
         dif.form-group 
             label(for='city') City:
-            input#city.form-control(type='text', placeholder="Ghent" name='city' required='true', value=(undefined===user ? '' : user.city))
+            input#city.form-control(type='text', placeholder="City" name='city' required='true', value=(undefined===user ? '' : user.city))
         div.form-group 
             label(for='street') Street:
             input#street.form-control(type='text', placeholder="Street" name='street' required='true', value=(undefined===user ? '' : user.street))
