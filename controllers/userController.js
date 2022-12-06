@@ -391,9 +391,7 @@ exports.user_update_post = [
         .trim()
         .isLength({ min: 1 })
         .escape()
-        .withMessage("Family name must be specified.")
-        .isAlphanumeric()
-        .withMessage("Family name has non-alphanumeric characters."),
+        .withMessage("Family name must be specified."),
     body("street")
         .trim()
         .isLength({ min: 1 })
