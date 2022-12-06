@@ -15,8 +15,8 @@ block content
                     div(class="input-group")
                         label Price limit: 0 &nbsp
                         input(type='range', min = "0", max = "100", name='price', value=`${price}` id="range")
-                        label 100 | &nbsp
-                        <span id="value">#{price}</span>
+                        label 100 | &nbsp 
+                        <span id="value">#{price} &nbsp </span>
                         button(type='submit') save
                         script(src='/javascripts/slider.js')
 
@@ -45,11 +45,11 @@ block content
     //                 h5(class="card-title") #{item.name}
     //                 p € #{item.price}
 
-    div(class="row row-cols-xl-6 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-4 mt-4")
+    div(class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-4 mt-4")
         each item in items
             div(class="col")
-                div(class="card border-0", style="height: 500px")
-                    <img class="card-img-top img-responsive" style="height:400px" src="#{item.imagePath}">
+                div(class="card border-0", style="min-height:500px;")
+                    <img class="card-img-top img-responsive" style="min-height:400px;" src="#{item.imagePath}">
                     div(class="card-body px-1")
                         h5(class="card-title") #{item.name}
                         p(class="card-text") € #{item.price}
