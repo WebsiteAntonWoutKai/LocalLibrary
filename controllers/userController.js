@@ -111,9 +111,7 @@ exports.user_register_post = [
         .trim()
         .isLength({ min: 1 })
         .escape()
-        .withMessage("Family name must be specified.")
-        .isAlphanumeric()
-        .withMessage("Family name has non-alphanumeric characters."),
+        .withMessage("Family name must be specified."),
     body("date_of_birth", "Invalid date of birth")
         .optional({ checkFalsy: true })
         .isISO8601()
